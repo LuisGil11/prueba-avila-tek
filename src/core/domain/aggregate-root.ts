@@ -6,7 +6,6 @@ export abstract class AggregateRoot<
   T extends ValueObject<T>
 > extends Entity<T> {
   protected _events: DomainEvent[] = [];
-  // private _version: number = 0;
   protected _version = 0;
 
   protected constructor(id: T) {
@@ -23,13 +22,15 @@ export abstract class AggregateRoot<
     return events;
   }
 
-  // protected apply(event: DomainEvent, fromHistory: boolean = false): void {
-  protected apply(event: DomainEvent, fromHistory = false): void {
+  protected async apply(
+    event: DomainEvent,
+    fromHistory = false
+  ): Promise<void> {
     const handler = this.getEventHandler(event);
     if (!handler)
       throw new Error(`No handler found for event: ${event.eventName}`);
     if (!fromHistory) this._events.push(event);
-    handler.call(this, event.context);
+    await Promise.resolve(handler.call(this, event.context));
     this._version++;
     this.validateState();
   }

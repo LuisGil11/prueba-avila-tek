@@ -1,10 +1,12 @@
+import { Currencies } from "@app/orders/domain/enum/currencies";
+
 export interface UpdateProductResponse {
   id: string;
   name: string;
   description: string;
   price: {
     amount: number;
-    currency: string;
+    currency: Currencies;
   };
   stock: {
     quantity: number;

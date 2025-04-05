@@ -12,6 +12,38 @@ export class PostgresProductsRepository implements ProductsRepository {
     this.logger = PinoLogger.getInstance();
   }
 
+  async findByIds(ids: string[]): Promise<Optional<Product[]>> {
+    try {
+      const products = await this.prisma.product.findMany({
+        where: {
+          id: { in: ids },
+        },
+      });
+
+      if (!products) return Optional.empty<Product[]>();
+      return Optional.of<Product[]>(
+        products.map((product) => ({
+          id: product.id,
+          name: product.name,
+          description: product.description,
+          price: {
+            amount: product.price,
+            currency: product.currency,
+          },
+          stock: {
+            quantity: product.stock,
+            unit: product.unit,
+          },
+        }))
+      );
+    } catch (error) {
+      this.logger.warn(
+        `An unexpected error occurred while retrieving products with ids ${ids}: ${error}`
+      );
+      return Optional.empty<Product[]>();
+    }
+  }
+
   async delete(id: string): Promise<Optional<Product>> {
     try {
       const product = await this.prisma.product.findUnique({

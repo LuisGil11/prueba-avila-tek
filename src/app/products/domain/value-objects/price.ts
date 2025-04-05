@@ -1,17 +1,16 @@
+import { Currencies } from "@app/orders/domain/enum/currencies";
 import { ValueObject } from "@core/domain/value-object";
 import { BaseException } from "@core/utils";
-
-const currenciesAvailable = ["USD", "EUR", "Bs"];
 
 export class ProductPrice implements ValueObject<ProductPrice> {
   private constructor(
     private readonly _value: {
       amount: number;
-      currency: string;
+      currency: Currencies;
     }
   ) {}
 
-  get value(): { amount: number; currency: string } {
+  get value(): { amount: number; currency: Currencies } {
     return this._value;
   }
 
@@ -22,18 +21,20 @@ export class ProductPrice implements ValueObject<ProductPrice> {
     );
   }
 
-  static create(value: { amount: number; currency: string }): ProductPrice {
+  static create(value: { amount: number; currency: Currencies }): ProductPrice {
     if (value.amount < 0) {
       throw new ProductPriceCreationFailedException(
         `Invalid price amount: ${value.amount}. Price cannot be negative.`
       );
     }
 
-    if (!currenciesAvailable.includes(value.currency)) {
+    if (!Object.values(Currencies).includes(value.currency)) {
       throw new ProductPriceCreationFailedException(
         `Invalid currency: ${
           value.currency
-        }. The available currencies are: ${currenciesAvailable.join(", ")}`
+        }. The available currencies are: ${Object.values(Currencies).join(
+          ", "
+        )}`
       );
     }
 

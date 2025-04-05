@@ -1,10 +1,11 @@
 import { UserRole } from "@app/auth/domain/value-objects";
+import { Currencies } from "@app/orders/domain/enum/currencies";
 
 interface SeedProduct {
   name: string;
   description: string;
   price: number;
-  currency: string;
+  currency: Currencies;
   stock: number;
   unit: string;
 }
@@ -44,7 +45,7 @@ export const seedData: SeedData = {
       stock: 7,
       unit: "units",
       price: 75,
-      currency: "USD",
+      currency: Currencies.USD,
       name: "Men’s Chill Crew Neck Sweatshirt",
     },
     {
@@ -53,7 +54,7 @@ export const seedData: SeedData = {
       stock: 5,
       unit: "units",
       price: 200,
-      currency: "USD",
+      currency: Currencies.USD,
       name: "Men's Quilted Shirt Jacket",
     },
 
@@ -63,7 +64,7 @@ export const seedData: SeedData = {
       stock: 10,
       unit: "units",
       price: 130,
-      currency: "USD",
+      currency: Currencies.USD,
       name: "Men's Raven Lightweight Zip Up Bomber Jacket",
     },
 
@@ -73,7 +74,7 @@ export const seedData: SeedData = {
       stock: 50,
       unit: "units",
       price: 45,
-      currency: "USD",
+      currency: Currencies.USD,
       name: "Men's Turbine Long Sleeve Tee",
     },
     {
@@ -82,7 +83,7 @@ export const seedData: SeedData = {
       stock: 50,
       unit: "units",
       price: 40,
-      currency: "USD",
+      currency: Currencies.USD,
       name: "Men's Turbine Short Sleeve Tee",
     },
     {
@@ -91,7 +92,7 @@ export const seedData: SeedData = {
       stock: 0,
       unit: "units",
       price: 35,
-      currency: "USD",
+      currency: Currencies.USD,
       name: "Men's Cybertruck Owl Tee",
     },
     {
@@ -100,7 +101,7 @@ export const seedData: SeedData = {
       stock: 15,
       unit: "units",
       price: 35,
-      currency: "USD",
+      currency: Currencies.USD,
       name: "Men's Solar Roof Tee",
     },
     {
@@ -109,7 +110,7 @@ export const seedData: SeedData = {
       stock: 17,
       unit: "units",
       price: 35,
-      currency: "USD",
+      currency: Currencies.USD,
       name: "Men's Let the Sun Shine Tee",
     },
     {
@@ -118,7 +119,7 @@ export const seedData: SeedData = {
       stock: 12,
       unit: "units",
       price: 35,
-      currency: "USD",
+      currency: Currencies.USD,
       name: "Men's 3D Large Wordmark Tee",
     },
     {
@@ -127,7 +128,7 @@ export const seedData: SeedData = {
       stock: 5,
       unit: "units",
       price: 35,
-      currency: "USD",
+      currency: Currencies.USD,
       name: "Men's 3D T Logo Tee",
     },
     {
@@ -136,7 +137,7 @@ export const seedData: SeedData = {
       stock: 2,
       unit: "units",
       price: 35,
-      currency: "USD",
+      currency: Currencies.USD,
       name: "Men’s 3D Small Wordmark Tee",
     },
     {
@@ -145,7 +146,7 @@ export const seedData: SeedData = {
       stock: 82,
       unit: "units",
       price: 35,
-      currency: "USD",
+      currency: Currencies.USD,
       name: "Men's Plaid Mode Tee",
     },
     {
@@ -154,7 +155,7 @@ export const seedData: SeedData = {
       stock: 24,
       unit: "units",
       price: 35,
-      currency: "USD",
+      currency: Currencies.USD,
       name: "Men's Powerwall Tee",
     },
     {
@@ -163,7 +164,7 @@ export const seedData: SeedData = {
       stock: 5,
       unit: "units",
       price: 30,
-      currency: "USD",
+      currency: Currencies.USD,
       name: "Men's Battery Day Tee",
     },
     {
@@ -172,7 +173,7 @@ export const seedData: SeedData = {
       stock: 150,
       unit: "units",
       price: 30,
-      currency: "USD",
+      currency: Currencies.USD,
       name: "Men’s Cybertruck Bulletproof Tee",
     },
     {
@@ -181,7 +182,7 @@ export const seedData: SeedData = {
       stock: 10,
       unit: "units",
       price: 35,
-      currency: "USD",
+      currency: Currencies.USD,
       name: "Men's Haha Yes Tee",
     },
     {
@@ -190,7 +191,7 @@ export const seedData: SeedData = {
       stock: 34,
       unit: "units",
       price: 35,
-      currency: "USD",
+      currency: Currencies.USD,
       name: "Men's S3XY Tee",
     },
     {
@@ -199,7 +200,7 @@ export const seedData: SeedData = {
       stock: 15,
       unit: "units",
       price: 40,
-      currency: "USD",
+      currency: Currencies.USD,
       name: "Men's 3D Wordmark Long Sleeve Tee",
     },
     {
@@ -208,7 +209,7 @@ export const seedData: SeedData = {
       stock: 12,
       unit: "units",
       price: 40,
-      currency: "USD",
+      currency: Currencies.USD,
       name: "Men's 3D T Logo Long Sleeve Tee",
     },
     {
@@ -217,7 +218,7 @@ export const seedData: SeedData = {
       stock: 10,
       unit: "units",
       price: 115,
-      currency: "USD",
+      currency: Currencies.USD,
       name: "Men's Raven Lightweight Hoodie",
     },
     {
@@ -226,7 +227,7 @@ export const seedData: SeedData = {
       stock: 10,
       unit: "units",
       price: 130,
-      currency: "USD",
+      currency: Currencies.USD,
       name: "Chill Pullover Hoodie",
     },
     {
@@ -235,7 +236,7 @@ export const seedData: SeedData = {
       stock: 100,
       unit: "units",
       price: 85,
-      currency: "USD",
+      currency: Currencies.USD,
       name: "Men's Chill Full Zip Hoodie",
     },
     {
@@ -244,7 +245,7 @@ export const seedData: SeedData = {
       stock: 7,
       unit: "units",
       price: 85,
-      currency: "USD",
+      currency: Currencies.USD,
       name: "Men's Chill Quarter Zip Pullover - Gray",
     },
     {
@@ -253,7 +254,7 @@ export const seedData: SeedData = {
       stock: 15,
       unit: "units",
       price: 85,
-      currency: "USD",
+      currency: Currencies.USD,
       name: "Men's Chill Quarter Zip Pullover - White",
     },
     {
@@ -262,7 +263,7 @@ export const seedData: SeedData = {
       stock: 15,
       unit: "units",
       price: 70,
-      currency: "USD",
+      currency: Currencies.USD,
       name: "3D Large Wordmark Pullover Hoodie",
     },
     {
@@ -271,7 +272,7 @@ export const seedData: SeedData = {
       stock: 13,
       unit: "units",
       price: 60,
-      currency: "USD",
+      currency: Currencies.USD,
       name: "Cybertruck Graffiti Hoodie",
     },
     {
@@ -280,7 +281,7 @@ export const seedData: SeedData = {
       stock: 11,
       unit: "units",
       price: 30,
-      currency: "USD",
+      currency: Currencies.USD,
       name: "Relaxed T Logo Hat",
     },
     {
@@ -289,7 +290,7 @@ export const seedData: SeedData = {
       stock: 13,
       unit: "units",
       price: 35,
-      currency: "USD",
+      currency: Currencies.USD,
       name: "Thermal Cuffed Beanie",
     },
     {
@@ -298,7 +299,7 @@ export const seedData: SeedData = {
       stock: 85,
       unit: "units",
       price: 225,
-      currency: "USD",
+      currency: Currencies.USD,
       name: "Women's Cropped Puffer Jacket",
     },
     {
@@ -307,7 +308,7 @@ export const seedData: SeedData = {
       stock: 10,
       unit: "units",
       price: 130,
-      currency: "USD",
+      currency: Currencies.USD,
       name: "Women's Chill Half Zip Cropped Hoodie",
     },
     {
@@ -316,7 +317,7 @@ export const seedData: SeedData = {
       stock: 9,
       unit: "units",
       price: 110,
-      currency: "USD",
+      currency: Currencies.USD,
       name: "Women's Raven Slouchy Crew Sweatshirt",
     },
     {
@@ -325,7 +326,7 @@ export const seedData: SeedData = {
       stock: 10,
       unit: "units",
       price: 45,
-      currency: "USD",
+      currency: Currencies.USD,
       name: "Women's Turbine Cropped Long Sleeve Tee",
     },
     {
@@ -334,7 +335,7 @@ export const seedData: SeedData = {
       stock: 0,
       unit: "units",
       price: 40,
-      currency: "USD",
+      currency: Currencies.USD,
       name: "Women's Turbine Cropped Short Sleeve Tee",
     },
     {
@@ -343,7 +344,7 @@ export const seedData: SeedData = {
       stock: 30,
       unit: "units",
       price: 35,
-      currency: "USD",
+      currency: Currencies.USD,
       name: "Women's T Logo Short Sleeve Scoop Neck Tee",
     },
     {
@@ -352,7 +353,7 @@ export const seedData: SeedData = {
       stock: 16,
       unit: "units",
       price: 40,
-      currency: "USD",
+      currency: Currencies.USD,
       name: "Women's T Logo Long Sleeve Scoop Neck Tee",
     },
     {
@@ -361,7 +362,7 @@ export const seedData: SeedData = {
       stock: 18,
       unit: "units",
       price: 35,
-      currency: "USD",
+      currency: Currencies.USD,
       name: "Women's Small Wordmark Short Sleeve V-Neck Tee",
     },
     {
@@ -370,7 +371,7 @@ export const seedData: SeedData = {
       stock: 5,
       unit: "units",
       price: 35,
-      currency: "USD",
+      currency: Currencies.USD,
       name: "Women's Large Wordmark Short Sleeve Crew Neck Tee",
     },
     {
@@ -379,7 +380,7 @@ export const seedData: SeedData = {
       stock: 16,
       unit: "units",
       price: 35,
-      currency: "USD",
+      currency: Currencies.USD,
       name: "Women's Plaid Mode Tee",
     },
     {
@@ -388,7 +389,7 @@ export const seedData: SeedData = {
       stock: 10,
       unit: "units",
       price: 130,
-      currency: "USD",
+      currency: Currencies.USD,
       name: "Women’s Powerwall Tee",
     },
     {
@@ -397,7 +398,7 @@ export const seedData: SeedData = {
       stock: 3,
       unit: "units",
       price: 90,
-      currency: "USD",
+      currency: Currencies.USD,
       name: "Women's Corp Jacket",
     },
     {
@@ -406,7 +407,7 @@ export const seedData: SeedData = {
       stock: 162,
       unit: "units",
       price: 100,
-      currency: "USD",
+      currency: Currencies.USD,
       name: "Women's Raven Joggers",
     },
     {
@@ -415,7 +416,7 @@ export const seedData: SeedData = {
       stock: 10,
       unit: "units",
       price: 30,
-      currency: "USD",
+      currency: Currencies.USD,
       name: "Kids Cybertruck Long Sleeve Tee",
     },
     {
@@ -424,7 +425,7 @@ export const seedData: SeedData = {
       stock: 0,
       unit: "units",
       price: 25,
-      currency: "USD",
+      currency: Currencies.USD,
       name: "Kids Scribble T Logo Tee",
     },
     {
@@ -433,7 +434,7 @@ export const seedData: SeedData = {
       stock: 10,
       unit: "units",
       price: 25,
-      currency: "USD",
+      currency: Currencies.USD,
       name: "Kids Cybertruck Tee",
     },
     {
@@ -442,7 +443,7 @@ export const seedData: SeedData = {
       stock: 10,
       unit: "units",
       price: 30,
-      currency: "USD",
+      currency: Currencies.USD,
       name: "Kids Racing Stripe Tee",
     },
     {
@@ -451,7 +452,7 @@ export const seedData: SeedData = {
       stock: 10,
       unit: "units",
       price: 30,
-      currency: "USD",
+      currency: Currencies.USD,
       name: "Kids 3D T Logo Tee",
     },
     {
@@ -460,7 +461,7 @@ export const seedData: SeedData = {
       stock: 10,
       unit: "units",
       price: 30,
-      currency: "USD",
+      currency: Currencies.USD,
       name: "Kids Checkered Tee",
     },
     {
@@ -469,7 +470,7 @@ export const seedData: SeedData = {
       stock: 16,
       unit: "units",
       price: 25,
-      currency: "USD",
+      currency: Currencies.USD,
       name: "Made on Earth by Humans Onesie",
     },
     {
@@ -478,7 +479,7 @@ export const seedData: SeedData = {
       stock: 0,
       unit: "units",
       price: 30,
-      currency: "USD",
+      currency: Currencies.USD,
       name: "Scribble T Logo Onesie",
     },
     {
@@ -487,7 +488,7 @@ export const seedData: SeedData = {
       stock: 10,
       unit: "units",
       price: 30,
-      currency: "USD",
+      currency: Currencies.USD,
       name: "Zero Emissions (Almost) Onesie",
     },
     {
@@ -496,7 +497,7 @@ export const seedData: SeedData = {
       stock: 10,
       unit: "units",
       price: 65,
-      currency: "USD",
+      currency: Currencies.USD,
       name: "Kids Cyberquad Bomber Jacket",
     },
     {
@@ -505,7 +506,7 @@ export const seedData: SeedData = {
       stock: 10,
       unit: "units",
       price: 30,
-      currency: "USD",
+      currency: Currencies.USD,
       name: "Kids Corp Jacket",
     },
   ],

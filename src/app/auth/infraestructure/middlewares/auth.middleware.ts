@@ -62,6 +62,8 @@ export const authenticate =
         return;
       }
 
+      req.body.userId = tokenPayload.userId;
+
       next();
     } catch (error) {
       logger.error(

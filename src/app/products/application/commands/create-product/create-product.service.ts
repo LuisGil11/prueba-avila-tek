@@ -13,6 +13,7 @@ import {
 } from "@app/products/domain/value-objects";
 import { Product } from "@app/products/domain/product";
 import { EventBus } from "@core/domain/event-bus";
+import { Currencies } from "@app/orders/domain/enum/currencies";
 
 export class CreateProductService
   implements Service<CreateProductDto, CreateProductResponse>
@@ -29,13 +30,26 @@ export class CreateProductService
   ): Promise<Result<CreateProductResponse, BaseException>> {
     const { name, currency, description, price, stock, unit } = request;
 
+    if (!Object.values(Currencies).includes(currency)) {
+      return Result.makeFail(
+        new CreateProductServiceException(
+          `Invalid currency: ${currency}. Supported currencies are: ${Object.values(
+            Currencies
+          ).join(", ")}`
+        )
+      );
+    }
+
     try {
       const id = this.idGenerator.generate();
 
       const productId = ProductId.create(id);
       const productName = ProductName.create(name);
       const productDescription = ProductDescription.create(description);
-      const productPrice = ProductPrice.create({ amount: price, currency });
+      const productPrice = ProductPrice.create({
+        amount: price,
+        currency: currency,
+      });
       const productStock = ProductStock.create({ quantity: stock, unit });
 
       const product = Product.create(

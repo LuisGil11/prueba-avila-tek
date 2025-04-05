@@ -6,6 +6,7 @@ import productRoutes from "@app/products/infraestructure/products.routes";
 import orderRoutes from "@app/orders/infraestructure/orders.routes";
 import "@app/auth/infraestructure/sync-handlers/user-registered.handler";
 import "@app/products/infraestructure/sync-handlers";
+import "@app/orders/infraestructure/sync-handlers/order-created.handler";
 
 const app = express();
 const logger = PinoLogger.getInstance();

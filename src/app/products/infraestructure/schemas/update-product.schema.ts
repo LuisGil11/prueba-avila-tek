@@ -8,7 +8,7 @@ export default object({
     name: string().optional(),
     description: string().optional(),
     price: number().optional(),
-    currency: string().optional(),
+    currency: string().optional().oneOf(["Bs", "USD", "EUR"]),
     stock: number().optional(),
     unit: string().optional(),
   }),
