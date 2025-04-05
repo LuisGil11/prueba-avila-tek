@@ -62,14 +62,15 @@ export const authenticate =
         return;
       }
 
-      req.body.userId = tokenPayload.userId;
+      res.locals.userId = tokenPayload.userId;
 
       next();
     } catch (error) {
+      console.log(error);
       logger.error(
         "Unexpected error in authentication middleware",
         JSON.stringify(error)
       );
-      res.status(401).json({ message: "Unauthorized" }).send();
+      res.status(401).json({ status: 201, message: "Unauthorized" }).send();
     }
   };

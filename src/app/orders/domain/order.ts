@@ -91,9 +91,6 @@ export class Order extends AggregateRoot<OrderId> {
       this._currency
     );
     this._user = UserId.create(event.userId);
-
-    console.log("En el create");
-    console.log({ order: this });
   }
 
   protected validateState(): void {

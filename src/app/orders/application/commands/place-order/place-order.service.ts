@@ -88,7 +88,7 @@ export class PlaceOrderService
 
       this.eventStore.append(orderId.value, events);
 
-      this.eventBus.publish(events);
+      this.eventBus.publish(events[0], orderId.value);
 
       return Result.makeOk({
         orderId: orderId.value,
