@@ -1,3 +1,5 @@
+import { UserRole } from "@app/auth/domain/value-objects";
+
 interface SeedProduct {
   name: string;
   description: string;
@@ -7,11 +9,34 @@ interface SeedProduct {
   unit: string;
 }
 
+interface SeedUser {
+  name: string;
+  email: string;
+  password: string;
+  role: UserRole;
+}
+
 interface SeedData {
+  users: SeedUser[];
   products: SeedProduct[];
 }
 
 export const seedData: SeedData = {
+  users: [
+    {
+      name: "Administrador",
+      email: "admin@gmail.com",
+      password: "Admin123*",
+      role: UserRole.ADMIN,
+    },
+    {
+      name: "User",
+      email: "user@gmail.com",
+      password: "User123*",
+      role: UserRole.USER,
+    },
+  ],
+
   products: [
     {
       description:
