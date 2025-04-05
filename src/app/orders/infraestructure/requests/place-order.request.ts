@@ -1,4 +1,5 @@
 import { Currencies } from "@app/orders/domain/enum/currencies";
+import { OrderStatus } from "@app/orders/domain/value-objects/status";
 
 interface Item {
   id: string;
@@ -8,4 +9,5 @@ interface Item {
 export interface PlaceOrderRequestBody {
   items: Item[];
   currency: Currencies;
+  status: OrderStatus;
 }

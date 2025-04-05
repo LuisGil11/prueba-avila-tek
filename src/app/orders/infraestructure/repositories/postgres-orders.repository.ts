@@ -1,5 +1,6 @@
 import { OrdersRepository } from "@app/orders/application/repositories/orders.repository";
 import { Order } from "@app/orders/application/responses/order.response";
+import { OrderStatus } from "@app/orders/domain/value-objects/status";
 import { Optional } from "@core/utils";
 import { PrismaClient } from "@prisma/client";
 
@@ -38,6 +39,7 @@ export class PostgresOrdersRepository implements OrdersRepository {
       return Optional.of<Order[]>(
         orders.map((order) => ({
           orderId: order.id,
+          status: order.status as OrderStatus,
           items: order.OrderDetail.map((item) => ({
             id: item.productId,
             name: item.product.name,
@@ -82,6 +84,7 @@ export class PostgresOrdersRepository implements OrdersRepository {
 
       return Optional.of<Order>({
         orderId: order.id,
+        status: order.status as OrderStatus,
         items: order.OrderDetail.map((item) => ({
           id: item.productId,
           name: item.product.name,

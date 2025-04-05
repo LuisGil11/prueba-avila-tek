@@ -86,18 +86,26 @@ export class OrdersController {
     req: Request<{}, {}, PlaceOrderRequestBody>,
     res: Response<PlaceOrderResponse>
   ) {
-    const result = await this.placeOrderService.execute({
-      ...req.body,
-      userId: res.locals.userId,
-    });
+    try {
+      const result = await this.placeOrderService.execute({
+        ...req.body,
+        userId: res.locals.userId,
+      });
 
-    console.log(result.getValue());
+      return result;
+    } catch (error) {
+      if (error instanceof BaseException) {
+        this.logger.error(error.message, JSON.stringify(error));
+        return Result.makeFail(error as BaseException);
+      }
+      this.logger.warn("Unhandled error was triggered in PlaceOrderService");
 
-    return result;
+      return Result.makeFail(error as BaseException);
+    }
   }
 
   @HttpResponseMapper(200)
-  async getById(req: Request<{ id: string }>, res: Response) {
+  async getById(req: Request<{ id: string }>, res: Response<Order>) {
     try {
       return await this.getOrderByIdService.execute(req.params.id);
     } catch (error) {

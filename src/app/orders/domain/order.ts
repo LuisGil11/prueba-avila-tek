@@ -14,12 +14,14 @@ import {
   CalculateTotalOrderPriceService,
 } from "./services";
 import { Currencies } from "./enum/currencies";
+import { OrderStatus } from "./value-objects/status";
 
 export class Order extends AggregateRoot<OrderId> {
   private _items?: OrderItem[];
   private _total?: OrderTotal;
   private _currency?: Currencies;
   private _user?: UserId;
+  private _status?: OrderStatus;
 
   private constructor(
     id: OrderId,
@@ -44,12 +46,17 @@ export class Order extends AggregateRoot<OrderId> {
     return this._user!;
   }
 
+  get status(): OrderStatus {
+    return this._status!;
+  }
+
   static async create(
     id: OrderId,
     items: OrderItem[],
     user: UserId,
     currencyConverter: CurrencyConverterService,
-    currency: Currencies = Currencies.USD
+    currency: Currencies = Currencies.USD,
+    status: OrderStatus = OrderStatus.ORDERED
   ): Promise<Order> {
     const order = new Order(id, currencyConverter);
     await order.apply(
@@ -59,13 +66,21 @@ export class Order extends AggregateRoot<OrderId> {
         items.map((item) => ({
           id: item.id.value,
           quantity: item.quantity.value,
-          price: item.price.value,
+          price: {
+            amount: order.currencyConverter.execute(
+              item.price.value.currency,
+              currency,
+              item.price.value.amount
+            ),
+            currency,
+          },
         })),
         {
           amount: items.reduce((acc, item) => acc + item.total, 0),
           currency,
         },
-        user.value
+        user.value,
+        status
       )
     );
     return order;
@@ -78,23 +93,31 @@ export class Order extends AggregateRoot<OrderId> {
         OrderProductQuantity.create(item.quantity),
         OrderItemPrice.create({
           amount: item.price.amount,
-          currency: item.price.currency,
+          currency: item.price.currency as Currencies,
         })
       )
     );
 
     this._currency = event.total.currency as Currencies;
 
-    this._total = await CalculateTotalOrderPriceService.calculateTotalPrice(
-      this._items,
-      this.currencyConverter,
-      this._currency
-    );
+    this._total = this.calculateTotal();
     this._user = UserId.create(event.userId);
+    this._status = event.status as OrderStatus;
+  }
+
+  private calculateTotal(): OrderTotal {
+    const total = this._items?.reduce((acc, item) => acc + item.total, 0) ?? 0;
+    return OrderTotal.create({ total, currency: this._currency! });
   }
 
   protected validateState(): void {
-    if (!this._items || !this._total || !this._user || !this._currency) {
+    if (
+      !this._items ||
+      !this._total ||
+      !this._user ||
+      !this._currency ||
+      !this._status
+    ) {
       throw new Error("Order state is invalid.");
     }
   }

@@ -18,6 +18,7 @@ import { ProductId } from "@app/products/domain/value-objects";
 import { UserId } from "@app/auth/domain/value-objects";
 import { Order } from "@app/orders/domain/order";
 import { Currencies } from "@app/orders/domain/enum/currencies";
+import { OrderStatus } from "@app/orders/domain/value-objects/status";
 
 export class PlaceOrderService
   implements Service<PlaceOrderDto, PlaceOrderResponse>
@@ -33,7 +34,12 @@ export class PlaceOrderService
   async execute(
     request: PlaceOrderDto
   ): Promise<Result<PlaceOrderResponse, BaseException>> {
-    const { userId, items, currency = Currencies.USD } = request;
+    const {
+      userId,
+      items,
+      currency = Currencies.USD,
+      status = OrderStatus.ORDERED,
+    } = request;
 
     try {
       const existingProductsResponse = await this.producstRepository.findByIds(
@@ -64,15 +70,20 @@ export class PlaceOrderService
 
       const orderId = OrderId.create(id);
 
-      const orderItems = items.map((item) =>
-        OrderItem.create(
+      const orderItems = items.map((item) => {
+        const existingProduct = existingProducts.find(
+          (product) => product.id === item.id
+        )!.price;
+
+        return OrderItem.create(
           ProductId.create(item.id),
           OrderProductQuantity.create(item.quantity),
-          OrderItemPrice.create(
-            existingProducts.find((product) => product.id === item.id)!.price
-          )
-        )
-      );
+          OrderItemPrice.create({
+            amount: existingProduct.amount,
+            currency: existingProduct.currency as Currencies,
+          })
+        );
+      });
 
       const user = UserId.create(userId);
 
@@ -81,7 +92,8 @@ export class PlaceOrderService
         orderItems,
         user,
         this.currencyConverterService,
-        currency
+        currency,
+        status
       );
 
       const events = order.pullEvents();
@@ -92,7 +104,8 @@ export class PlaceOrderService
 
       return Result.makeOk({
         orderId: orderId.value,
-        items: orderItems.map((item) => ({
+        status: order.status,
+        items: order.items.map((item) => ({
           id: item.id.value,
           name: existingProducts.find(
             (product) => product.id === item.id.value

@@ -3,9 +3,12 @@ import { AnySchema } from "yup";
 import { JwtService } from "../services";
 import { UserRole } from "@app/auth/domain/value-objects";
 import { PinoLogger } from "@core/infraestructure";
+import { PrismaClient } from "@prisma/client";
 
 const tokenService = new JwtService();
 const logger = PinoLogger.getInstance();
+
+const prisma = new PrismaClient();
 
 export const authenticate =
   (validRoles: UserRole[]) =>
@@ -37,7 +40,24 @@ export const authenticate =
         return;
       }
 
-      const userRole = UserRole[tokenPayload.role as keyof typeof UserRole];
+      const user = await prisma.user.findUnique({
+        where: {
+          id: tokenPayload.userId,
+        },
+      });
+
+      if (!user) {
+        res
+          .status(401)
+          .json({
+            status: 401,
+            message: "Unauthorized. User not found.",
+          })
+          .send();
+        return;
+      }
+
+      const userRole = user.role as UserRole;
 
       if (!userRole) {
         res
@@ -62,7 +82,7 @@ export const authenticate =
         return;
       }
 
-      res.locals.userId = tokenPayload.userId;
+      res.locals.userId = user.id;
 
       next();
     } catch (error) {

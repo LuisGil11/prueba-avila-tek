@@ -1,5 +1,8 @@
+import { OrderStatus } from "@app/orders/domain/value-objects/status";
+
 export interface PlaceOrderResponse {
   orderId: string;
+  status: OrderStatus;
   items: {
     id: string;
     name: string;

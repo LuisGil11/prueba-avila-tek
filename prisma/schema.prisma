@@ -86,6 +86,7 @@ model Order {
   id       String @id @default(uuid())
   total    Float
   currency String
+  status   String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

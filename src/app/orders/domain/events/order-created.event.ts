@@ -1,4 +1,5 @@
 import { DomainEvent } from "@core/domain/domain-event";
+import { OrderStatus } from "../value-objects/status";
 
 export class OrderCreated extends DomainEvent {
   constructor(
@@ -16,8 +17,9 @@ export class OrderCreated extends DomainEvent {
       amount: number;
       currency: string;
     },
-    public userId: string
+    public userId: string,
+    public status: OrderStatus = OrderStatus.ORDERED
   ) {
-    super(aggregateId, { items, userId, total }, aggVersion);
+    super(aggregateId, { items, userId, total, status }, aggVersion);
   }
 }

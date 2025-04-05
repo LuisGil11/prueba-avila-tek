@@ -11,5 +11,6 @@ export default object({
       })
     ),
     currency: string().oneOf(["Bs", "USD", "EUR"]).optional(),
+    status: string().oneOf(["ORDERED", "PAID"]).optional(),
   }),
 });

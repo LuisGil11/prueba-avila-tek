@@ -19,6 +19,7 @@ const handler = async (event: unknown, prodiverId?: string) => {
         userId: orderCreatedEvent.userId,
         total: orderCreatedEvent.total.amount,
         currency: orderCreatedEvent.total.currency,
+        status: orderCreatedEvent.status,
       },
     });
 
