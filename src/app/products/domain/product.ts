@@ -32,6 +32,7 @@ export class Product extends AggregateRoot<ProductId> {
     product.apply(
       new ProductCreated(
         id.value,
+        product.version,
         name.value,
         description.value,
         price.value,
@@ -54,8 +55,6 @@ export class Product extends AggregateRoot<ProductId> {
       stock: ProductStock;
     }> = {};
 
-    console.log(this._name);
-
     if (name && !this._name!.equals(name)) {
       changes.name = name;
     }
@@ -71,13 +70,14 @@ export class Product extends AggregateRoot<ProductId> {
 
     if (Object.keys(changes).length === 0) {
       throw new InvalidProductUpdateException(
-        "No changes detected in the product update"
+        "No changes detected in the updated product"
       );
     }
 
     this.apply(
       new ProductUpdated(
         this.id.value,
+        this.version,
         changes.name ? changes.name.value : undefined,
         changes.description ? changes.description.value : undefined,
         changes.price ? changes.price.value : undefined,
@@ -88,8 +88,6 @@ export class Product extends AggregateRoot<ProductId> {
   }
 
   [`on${ProductCreated.name}`](context: ProductCreated): void {
-    console.log({ context });
-
     this._name = ProductName.create(context.name);
     this._description = ProductDescription.create(context.description);
     this._price = ProductPrice.create(context.price);
@@ -105,8 +103,6 @@ export class Product extends AggregateRoot<ProductId> {
   }
 
   protected validateState(): void {
-    console.log(this);
-
     if (!this._name || !this._description || !this._price || !this._stock) {
       throw new Error("Product state is invalid");
     }

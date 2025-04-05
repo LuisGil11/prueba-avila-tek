@@ -48,13 +48,13 @@ export class UpdateProductService
       product.update(
         name ? ProductName.create(name) : undefined,
         description ? ProductDescription.create(description) : undefined,
-        price
+        price || currency
           ? ProductPrice.create({
               amount: price ? price : product._price?.value.amount!,
               currency: currency ? currency : product._price?.value.currency!,
             })
           : undefined,
-        stock
+        stock || unit
           ? ProductStock.create({
               quantity: stock ? stock : product._stock?.value.quantity!,
               unit: unit ? unit : product._stock?.value.unit!,

@@ -23,6 +23,7 @@ export class PostgresEventStore implements EventStore {
           aggregateId: stream,
           eventType: event.eventName,
           payload: event.context,
+          version: event.version,
         })),
       });
     } catch (error) {
@@ -39,6 +40,9 @@ export class PostgresEventStore implements EventStore {
         where: {
           aggregateId: stream,
         },
+        orderBy: {
+          version: "asc",
+        },
       });
 
       return events.map((event) => {
@@ -47,7 +51,12 @@ export class PostgresEventStore implements EventStore {
             ? JSON.parse(event.payload)
             : event.payload;
 
-        return new DomainEvent(event.aggregateId, payload, event.eventType);
+        return new DomainEvent(
+          event.aggregateId,
+          payload,
+          event.version,
+          event.eventType
+        );
       });
     } catch (error) {
       this.logger.error(

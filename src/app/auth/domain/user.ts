@@ -31,6 +31,7 @@ export class User extends AggregateRoot<UserId> {
     user.apply(
       new UserRegistered(
         id.value,
+        user.version,
         name.value,
         password.value,
         email.value,

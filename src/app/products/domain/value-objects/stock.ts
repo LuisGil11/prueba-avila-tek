@@ -19,27 +19,30 @@ export class ProductStock implements ValueObject<ProductStock> {
   }
 
   equals(obj: ProductStock): boolean {
-    return this._value === obj.value;
+    return (
+      this._value.quantity === obj.value.quantity &&
+      this._value.unit === obj.value.unit
+    );
   }
 
   static create(value: { quantity: number; unit: string }): ProductStock {
     if (value.quantity < 0) {
       throw new ProductStockCreationFailedException(
-        `Invalid stock: ${value}. Stock cannot be negative`
+        `Invalid  quantity: ${value.quantity}. Stock quantity cannot be negative`
       );
     }
 
     if (!Number.isInteger(value.quantity)) {
       throw new ProductStockCreationFailedException(
-        `Invalid stock: ${value}. Stock must be an integer`
+        `Invalid stock quantity: ${value.quantity}. Stock quantity must be an integer`
       );
     }
 
     if (!availableUnits.includes(value.unit)) {
       throw new ProductStockCreationFailedException(
-        `Invalid stock: ${value}. Unit is not valid. Available units are: ${availableUnits.join(
-          ", "
-        )}`
+        `Invalid stock unit: ${
+          value.unit
+        }. Unit is not valid. Available units are: ${availableUnits.join(", ")}`
       );
     }
     return new ProductStock(value);

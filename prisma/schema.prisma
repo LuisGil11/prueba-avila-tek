@@ -62,9 +62,11 @@ model Product {
 }
 
 model DomainEvent {
-  id          String   @id @default(uuid())
+  id          String @id @default(uuid())
   aggregateId String
   eventType   String
   payload     Json
-  occurredAt  DateTime @default(now())
+  version     Int
+
+  occurredAt DateTime @default(now())
 }

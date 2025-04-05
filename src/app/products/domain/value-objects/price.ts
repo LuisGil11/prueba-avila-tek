@@ -24,7 +24,9 @@ export class ProductPrice implements ValueObject<ProductPrice> {
 
   static create(value: { amount: number; currency: string }): ProductPrice {
     if (value.amount < 0) {
-      throw new ProductPriceCreationFailedException(`Invalid price: ${value}`);
+      throw new ProductPriceCreationFailedException(
+        `Invalid price amount: ${value.amount}. Price cannot be negative.`
+      );
     }
 
     if (!currenciesAvailable.includes(value.currency)) {

@@ -3,6 +3,7 @@ import { DomainEvent } from "@core/domain/domain-event";
 export class ProductUpdated extends DomainEvent {
   constructor(
     public aggregateId: string,
+    public aggVersion: number,
     public name?: string,
     public description?: string,
     public price?: { amount: number; currency: string },
@@ -19,6 +20,6 @@ export class ProductUpdated extends DomainEvent {
       Object.entries(changes).filter(([_, value]) => value !== undefined)
     );
 
-    super(aggregateId, filteredChanges);
+    super(aggregateId, filteredChanges, aggVersion);
   }
 }
