@@ -6,20 +6,19 @@ export const validate =
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       await schema.validate({
-        body: req.body,
         params: req.params,
+        body: req.body,
         query: req.query,
       });
       next();
-    } catch (error) {
+    } catch (err) {
       res
         .status(400)
         .json({
           status: 400,
-          error: (error as Error).message,
+          error: (err as { errors: string[] }).errors,
         })
         .send();
-      res.send();
       return;
     }
   };

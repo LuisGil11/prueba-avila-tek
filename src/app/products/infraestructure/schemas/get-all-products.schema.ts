@@ -1,8 +1,8 @@
-import { number, object, string } from "yup";
+import { number, object } from "yup";
 
 export default object({
   query: object({
-    limit: string().optional(),
-    offset: string().optional(),
+    limit: number().optional().typeError("limit must be a number"),
+    offset: number().optional().typeError("offset must be a number"),
   }),
 });

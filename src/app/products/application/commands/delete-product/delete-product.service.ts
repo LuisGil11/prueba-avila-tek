@@ -3,7 +3,7 @@ import { DeleteProductDto } from "./dtos/delete-product.dto";
 import { DeleteProductResponse } from "./response/delete-product.response";
 import { Result, BaseException } from "@core/utils";
 import { ProductsRepository } from "../../repositories/product.repository";
-import { ProductNotFoundException } from "@app/products/infraestructure/queries/get-product-by-id.service";
+import { ProductNotFoundException } from "../../exceptions";
 
 export class DeleteProductService
   implements Service<DeleteProductDto, DeleteProductResponse>

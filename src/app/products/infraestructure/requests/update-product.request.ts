@@ -8,5 +8,5 @@ export interface UpdateProductRequestBody {
 }
 
 export interface UpdateProductRequestParams {
-  id: string;
+  id?: string;
 }

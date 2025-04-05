@@ -1,15 +1,14 @@
 import { Router } from "express";
-import registerUserSchema from "./schemas/register-user.schema";
 import { validate } from "@core/infraestructure/middleware";
 import { AuthController } from "./auth.controller";
-import loginSchema from "./schemas/login.schema";
+import { loginSchema, registerSchema } from "./schemas";
 
 const router = Router();
 const authController = new AuthController();
 
 router.post(
   "/",
-  validate(registerUserSchema),
+  validate(registerSchema),
   authController.register.bind(authController)
 );
 

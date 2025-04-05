@@ -7,6 +7,8 @@ import {
   UserPasswordCreationFailedException,
 } from "@app/auth/domain/value-objects";
 import { DeleteProductServiceException } from "@app/products/application/commands/delete-product";
+import { ProductNotFoundException } from "@app/products/application/exceptions";
+import { ProductBadRequestException } from "@app/products/application/exceptions/product-bad-request.exception";
 import {
   InvalidProductStateException,
   InvalidProductUpdateException,
@@ -19,7 +21,6 @@ import {
   ProductStockCreationFailedException,
 } from "@app/products/domain/value-objects";
 import { GetAllProductsServiceException } from "@app/products/infraestructure/queries/get-all-products.service";
-import { ProductNotFoundException } from "@app/products/infraestructure/queries/get-product-by-id.service";
 import { HttpResponse } from "@core/infraestructure/types";
 import { BaseException, Result } from "@core/utils";
 import { Response } from "express";
@@ -77,6 +78,7 @@ const badRequestExceptions: string[] = [
   InvalidProductUpdateException.code,
   InvalidProductStateException.code,
   DeleteProductServiceException.code,
+  ProductBadRequestException.code,
 ];
 
 const internalServerErrorExceptions: string[] = [

@@ -13,6 +13,7 @@ import {
   ProductPrice,
   ProductStock,
 } from "@app/products/domain/value-objects";
+import { ProductNotFoundException } from "../../exceptions";
 
 export class UpdateProductService
   implements Service<UpdateProductDto, UpdateProductResponse>
@@ -26,9 +27,7 @@ export class UpdateProductService
   name: string = this.constructor.name;
   async execute(
     request: UpdateProductDto
-  ): Promise<
-    Result<UpdateProductResponse, UpdateProductServiceFailedException>
-  > {
+  ): Promise<Result<UpdateProductResponse, BaseException>> {
     const { id, name, currency, description, price, stock, unit } = request;
 
     try {
@@ -36,9 +35,7 @@ export class UpdateProductService
 
       if (!currentProduct.hasValue) {
         return Result.makeFail(
-          new UpdateProductServiceFailedException(
-            `Product with id ${id} not found`
-          )
+          new ProductNotFoundException(`Product with id ${id} not found`)
         );
       }
 

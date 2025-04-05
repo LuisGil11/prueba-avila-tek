@@ -1,3 +1,4 @@
+import { ProductNotFoundException } from "@app/products/application/exceptions";
 import { ProductsRepository } from "@app/products/application/repositories/product.repository";
 import { Product } from "@app/products/types/product";
 import { Service } from "@core/application";
@@ -27,14 +28,6 @@ export class GetProductByIdService implements Service<string, Product> {
         )
       );
     }
-  }
-}
-
-export class ProductNotFoundException extends BaseException {
-  static code = "PRODUCT_NOT_FOUND_EXCEPTION";
-
-  constructor(message: string, cause?: BaseException) {
-    super(message, ProductNotFoundException.code, cause);
   }
 }
 

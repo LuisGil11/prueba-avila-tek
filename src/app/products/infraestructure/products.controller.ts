@@ -34,6 +34,7 @@ import {
   DeleteProductResponse,
   DeleteProductService,
 } from "../application/commands/delete-product";
+import { ProductBadRequestException } from "../application/exceptions/product-bad-request.exception";
 
 export class ProductsController {
   private readonly createProductService: Service<
@@ -168,7 +169,7 @@ export class ProductsController {
 
   @HttpResponseMapper(200)
   async update(
-    req: Request<UpdateProductRequestParams, {}, UpdateProductRequestBody>,
+    req: Request<{ id: string }, {}, UpdateProductRequestBody>,
     res: Response<HttpResponse<UpdateProductResponse>>
   ) {
     try {
