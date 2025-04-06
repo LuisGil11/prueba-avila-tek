@@ -91,6 +91,9 @@ export const authenticate =
         "Unexpected error in authentication middleware",
         JSON.stringify(error)
       );
-      res.status(401).json({ status: 201, message: "Unauthorized" }).send();
+      res
+        .status(401)
+        .json({ status: 401, message: "Unauthorized. Invalid token" })
+        .send();
     }
   };

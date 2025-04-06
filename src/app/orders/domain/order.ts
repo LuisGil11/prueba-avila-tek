@@ -9,12 +9,10 @@ import {
 import { UserId } from "@app/auth/domain/value-objects";
 import { ProductId } from "@app/products/domain/value-objects";
 import { OrderCreated } from "./events/order-created.event";
-import {
-  CurrencyConverterService,
-  CalculateTotalOrderPriceService,
-} from "./services";
 import { Currencies } from "./enum/currencies";
 import { OrderStatus } from "./value-objects/status";
+import { DomainEvent } from "@core/domain/domain-event";
+import { StatusChanged } from "./events/status-changed.event";
 
 export class Order extends AggregateRoot<OrderId> {
   private _items?: OrderItem[];
@@ -23,10 +21,7 @@ export class Order extends AggregateRoot<OrderId> {
   private _user?: UserId;
   private _status?: OrderStatus;
 
-  private constructor(
-    id: OrderId,
-    private readonly currencyConverter: CurrencyConverterService
-  ) {
+  private constructor(id: OrderId) {
     super(id);
   }
 
@@ -50,16 +45,23 @@ export class Order extends AggregateRoot<OrderId> {
     return this._status!;
   }
 
-  static async create(
+  static loadFromHistory(id: OrderId, events: DomainEvent[]): Order {
+    const order = new Order(id);
+
+    order.rehydrate(events);
+    order.validateState();
+    return order;
+  }
+
+  static create(
     id: OrderId,
     items: OrderItem[],
     user: UserId,
-    currencyConverter: CurrencyConverterService,
     currency: Currencies = Currencies.USD,
     status: OrderStatus = OrderStatus.ORDERED
-  ): Promise<Order> {
-    const order = new Order(id, currencyConverter);
-    await order.apply(
+  ): Order {
+    const order = new Order(id);
+    order.apply(
       new OrderCreated(
         id.value,
         order.version,
@@ -67,11 +69,11 @@ export class Order extends AggregateRoot<OrderId> {
           id: item.id.value,
           quantity: item.quantity.value,
           price: {
-            amount: order.currencyConverter.execute(
-              item.price.value.currency,
-              currency,
-              item.price.value.amount
-            ),
+            amount: item.price.value.amount,
+            currency: item.price.value.currency as Currencies,
+          },
+          total: {
+            amount: item.total,
             currency,
           },
         })),
@@ -86,7 +88,11 @@ export class Order extends AggregateRoot<OrderId> {
     return order;
   }
 
-  async [`on${OrderCreated.name}`](event: OrderCreated): Promise<void> {
+  changeStatus(status: OrderStatus): void {
+    this.apply(new StatusChanged(this.id.value, this.version, status));
+  }
+
+  [`on${OrderCreated.name}`](event: OrderCreated): void {
     this._items = event.items.map((item) =>
       OrderItem.create(
         ProductId.create(item.id),
@@ -108,6 +114,10 @@ export class Order extends AggregateRoot<OrderId> {
   private calculateTotal(): OrderTotal {
     const total = this._items?.reduce((acc, item) => acc + item.total, 0) ?? 0;
     return OrderTotal.create({ total, currency: this._currency! });
+  }
+
+  [`on${StatusChanged.name}`](event: StatusChanged): void {
+    this._status = event.status as OrderStatus;
   }
 
   protected validateState(): void {

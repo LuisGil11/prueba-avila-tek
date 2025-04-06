@@ -22,15 +22,12 @@ export abstract class AggregateRoot<
     return events;
   }
 
-  protected async apply(
-    event: DomainEvent,
-    fromHistory = false
-  ): Promise<void> {
+  protected apply(event: DomainEvent, fromHistory = false): void {
     const handler = this.getEventHandler(event);
     if (!handler)
       throw new Error(`No handler found for event: ${event.eventName}`);
     if (!fromHistory) this._events.push(event);
-    await Promise.resolve(handler.call(this, event.context));
+    handler.call(this, event.context);
     this._version++;
     this.validateState();
   }

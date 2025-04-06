@@ -24,11 +24,7 @@ export class LoggerDecorator<T, R> extends Decorator<T, R> {
       return result;
     }
 
-    this.logger.verbose(
-      `Ejecución exitosa de [${this.wrappee.name}]: ${JSON.stringify(
-        result.getValue()
-      )}`
-    );
+    this.logger.log(`Ejecución exitosa de [${this.wrappee.name}]`);
 
     return result;
   }

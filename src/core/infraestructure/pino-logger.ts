@@ -7,6 +7,7 @@ export class PinoLogger implements ILogger {
 
   private constructor() {
     this.logger = pino({
+      level: "debug",
       transport: {
         target: "pino-pretty",
         options: {

@@ -23,6 +23,9 @@ import { OrdersRepository } from "../application/repositories/orders.repository"
 import { GetOrdersByUserIdService } from "./queries/get-orders-by-user-id/get-orders-by-user-id.service";
 import { BaseException, Result } from "@core/utils";
 import { PlaceOrderRequestBody } from "./requests/place-order.request";
+import { ChangeOrderStatusDto } from "../application/commands/change-order-status/dtos/change-order-status.dto";
+import { ChangeOrderStatusResponse } from "../application/commands/change-order-status/responses/change-order-status.response";
+import { ChangeOrderStatusService } from "../application/commands/change-order-status/change-order-status.service";
 
 export class OrdersController {
   private readonly placeOrderService: Service<
@@ -37,17 +40,24 @@ export class OrdersController {
   >;
   private readonly getOrderByIdService: Service<string, Order>;
 
+  private readonly changeOrderStatusService: Service<
+    ChangeOrderStatusDto,
+    ChangeOrderStatusResponse
+  >;
+
   private readonly logger = PinoLogger.getInstance();
 
   private readonly postgresOrdersRepository: OrdersRepository;
 
   constructor() {
+    const eventStore = new PostgresEventStore();
+
     this.placeOrderService = new LoggerDecorator(
       this.logger,
       new PerformanceDecorator(
         new PlaceOrderService(
           EventEmitterBus.getInstance(),
-          new PostgresEventStore(),
+          eventStore,
           new PostgresProductsRepository(),
           new InfraCurrencyConverter(),
           new UuidGenerator()
@@ -76,6 +86,18 @@ export class OrdersController {
       this.logger,
       new PerformanceDecorator(
         new GetOrderByIdService(this.postgresOrdersRepository),
+        this.logger
+      )
+    );
+
+    this.changeOrderStatusService = new LoggerDecorator(
+      this.logger,
+      new PerformanceDecorator(
+        new ChangeOrderStatusService(
+          eventStore,
+          EventEmitterBus.getInstance(),
+          this.postgresOrdersRepository
+        ),
         this.logger
       )
     );
@@ -164,6 +186,31 @@ export class OrdersController {
       this.logger.warn(
         "Unhandled error was triggered in GetOrdersByUserIdService"
       );
+
+      return Result.makeFail(error as BaseException);
+    }
+  }
+
+  @HttpResponseMapper(202)
+  async changeOrderStatus(
+    req: Request<{ id: string }, {}, ChangeOrderStatusDto>,
+    res: Response<ChangeOrderStatusResponse>
+  ) {
+    const { status } = req.body;
+    const { id } = req.params;
+
+    try {
+      const result = await this.changeOrderStatusService.execute({
+        orderId: id,
+        status,
+      });
+      return result;
+    } catch (error) {
+      if (error instanceof BaseException) {
+        this.logger.error(error.message, JSON.stringify(error));
+        return Result.makeFail(error as BaseException);
+      }
+      this.logger.warn("Unhandled error was triggered in ChangeStatusService");
 
       return Result.makeFail(error as BaseException);
     }

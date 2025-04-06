@@ -32,6 +32,10 @@ export class PerformanceDecorator<T, R> extends Decorator<T, R> {
         },
       });
 
+      this.logger.verbose(
+        `Performance data saved for ${this.wrappee.constructor.name}: ${time}ms`
+      );
+
       return result;
     } catch (error) {
       this.logger.warn(

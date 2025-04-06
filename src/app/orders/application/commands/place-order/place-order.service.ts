@@ -79,22 +79,19 @@ export class PlaceOrderService
           ProductId.create(item.id),
           OrderProductQuantity.create(item.quantity),
           OrderItemPrice.create({
-            amount: existingProduct.amount,
-            currency: existingProduct.currency as Currencies,
+            amount: this.currencyConverterService.execute(
+              existingProduct.currency as Currencies,
+              currency,
+              existingProduct.amount
+            ),
+            currency,
           })
         );
       });
 
       const user = UserId.create(userId);
 
-      const order = await Order.create(
-        orderId,
-        orderItems,
-        user,
-        this.currencyConverterService,
-        currency,
-        status
-      );
+      const order = Order.create(orderId, orderItems, user, currency, status);
 
       const events = order.pullEvents();
 
