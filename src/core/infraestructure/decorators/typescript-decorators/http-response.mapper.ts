@@ -8,6 +8,7 @@ import {
 } from "@app/auth/domain/value-objects";
 import { ChangeOrderStatusServiceException } from "@app/orders/application/commands/change-order-status/change-order-status.service";
 import { PlaceOrderServiceException } from "@app/orders/application/commands/place-order";
+import { OrderNotFoundException } from "@app/orders/application/exceptions/order-not-found.exception";
 import {
   OrderIdCreationFailedException,
   OrderItemPriceCreationFailedException,
@@ -121,7 +122,10 @@ const badRequestExceptions: string[] = [
 
 const internalServerErrorExceptions: string[] = [UnexpectedException.code];
 
-const notFoundExceptions: string[] = [ProductNotFoundException.code];
+const notFoundExceptions: string[] = [
+  ProductNotFoundException.code,
+  OrderNotFoundException.code,
+];
 
 const errorMapper = (errorCode: string) => {
   if (badRequestExceptions.includes(errorCode)) {
