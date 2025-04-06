@@ -7,6 +7,6 @@ export default object({
   body: object({
     status: string()
       .required("status is required")
-      .oneOf(["PAID", "PROCESSING", "SHIPPED", "DELIVERED"]),
+      .oneOf(["ORDERED", "PAID", "PROCESSING", "SHIPPED", "DELIVERED"]),
   }),
 });

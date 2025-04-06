@@ -7,6 +7,6 @@ export default object({
     status: string()
       .optional()
       .typeError("status must be a string")
-      .oneOf(["PAID", "PROCESSING", "SHIPPED", "DELIVERED"]),
+      .oneOf(["ORDERED", "PAID", "PROCESSING", "SHIPPED", "DELIVERED"]),
   }),
 });
