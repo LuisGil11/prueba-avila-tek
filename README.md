@@ -59,14 +59,9 @@ Una vez la aplicación esté corriendo, puedes acceder a la documentación de la
 
 ## 🌱 Ejecutar el Seed
 
-Para poblar la base de datos con datos iniciales, accede al contenedor de la aplicación y ejecuta el comando de seed:
+> Para poblar la base de datos con datos iniciales, dirigete al postman y ejecuta la petición al endpoint del seed
 
-```bash
-docker exec -it <nombre_del_contenedor_app> npm run seed
-```
-
-> Reemplaza `<nombre_del_contenedor_app>` por el nombre correcto según tu `docker-compose.yml`.
-
+> 
 ---
 
 ## ✅ ¡Todo Listo!
