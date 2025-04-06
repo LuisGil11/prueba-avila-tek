@@ -8,6 +8,7 @@ import { OrderNotFoundException } from "../../exceptions/order-not-found.excepti
 import { OrderId } from "@app/orders/domain/value-objects";
 import { Order } from "@app/orders/domain/order";
 import { ChangeOrderStatusResponse } from "./responses/change-order-status.response";
+import { UnexpectedExceptionHandler } from "@core/infraestructure/exceptions/unexpected-error.exception";
 
 export class ChangeOrderStatusService
   implements Service<ChangeOrderStatusDto, ChangeOrderStatusResponse>
@@ -52,15 +53,7 @@ export class ChangeOrderStatusService
         status: order.status,
       });
     } catch (error) {
-      if (error instanceof BaseException) {
-        return Result.makeFail(error);
-      }
-
-      return Result.makeFail(
-        new ChangeOrderStatusServiceException(
-          `An error occurred while changing the order status`
-        )
-      );
+      return UnexpectedExceptionHandler.handle(error, this.name);
     }
   }
 }

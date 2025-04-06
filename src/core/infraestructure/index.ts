@@ -1,2 +1,2 @@
-export * from "./pino-logger";
+export * from "./utils/pino-logger";
 export * from "./types";

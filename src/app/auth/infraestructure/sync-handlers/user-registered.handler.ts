@@ -1,6 +1,6 @@
 import { UserRegistered } from "@app/auth/domain/events/user-registered";
 import { PinoLogger } from "@core/infraestructure";
-import { EventEmitterBus } from "@core/infraestructure/event-emitter-bus";
+import { EventEmitterBus } from "@core/infraestructure/utils/event-emitter-bus";
 import { PrismaClient, UserRole as PrismaUserRole } from "@prisma/client";
 
 const eventBus = EventEmitterBus.getInstance();

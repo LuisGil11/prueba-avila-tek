@@ -6,13 +6,24 @@ import {
   UserNameCreationFailedException,
   UserPasswordCreationFailedException,
 } from "@app/auth/domain/value-objects";
-import { DeleteProductServiceException } from "@app/products/application/commands/delete-product";
-import { ProductNotFoundException } from "@app/products/application/exceptions";
-import { ProductBadRequestException } from "@app/products/application/exceptions/product-bad-request.exception";
+import { ChangeOrderStatusServiceException } from "@app/orders/application/commands/change-order-status/change-order-status.service";
+import { PlaceOrderServiceException } from "@app/orders/application/commands/place-order";
 import {
-  InvalidProductStateException,
-  InvalidProductUpdateException,
-} from "@app/products/domain/product";
+  OrderIdCreationFailedException,
+  OrderItemPriceCreationFailedException,
+  OrderProductQuantityCreationFailedException,
+  OrderTotalCreationFailedException,
+} from "@app/orders/domain/value-objects";
+import {
+  GetAllOrdersServiceException,
+  GetOrderByIdServiceException,
+} from "@app/orders/infraestructure/queries";
+import { GetOrdersByUserIdServiceException } from "@app/orders/infraestructure/queries/get-orders-by-user-id/get-orders-by-user-id.service";
+import { CreateProductServiceException } from "@app/products/application/commands/create-product/create-product.service";
+import { DeleteProductServiceException } from "@app/products/application/commands/delete-product";
+import { UpdateProductServiceFailedException } from "@app/products/application/commands/update-product";
+import { ProductNotFoundException } from "@app/products/application/exceptions";
+import { InvalidProductUpdateException } from "@app/products/domain/product";
 import {
   ProductDescriptionCreationFailedException,
   ProductIdCreationFailedException,
@@ -21,6 +32,8 @@ import {
   ProductStockCreationFailedException,
 } from "@app/products/domain/value-objects";
 import { GetAllProductsServiceException } from "@app/products/infraestructure/queries/get-all-products.service";
+import { GetProductByIdServiceException } from "@app/products/infraestructure/queries/get-product-by-id.service";
+import { UnexpectedException } from "@core/infraestructure/exceptions/unexpected-error.exception";
 import { HttpResponse } from "@core/infraestructure/types";
 import { BaseException, Result } from "@core/utils";
 import { Response } from "express";
@@ -64,26 +77,49 @@ export function HttpResponseMapper(okStatus: number = 200) {
 }
 
 const badRequestExceptions: string[] = [
+  // ? Auth exceptions
+  //* Service exceptions
+  LoginServiceFailedException.code,
   RegisterUserServiceFailedExceptionCodes.USER_ALREADY_EXISTS,
-  UserIdCreationFailedException.code,
+
+  //* Domain exceptions
+  UserNameCreationFailedException.code,
   UserMailCreationFailedException.code,
   UserPasswordCreationFailedException.code,
-  UserNameCreationFailedException.code,
-  LoginServiceFailedException.code,
+  UserIdCreationFailedException.code,
+
+  // ? Product exceptions
+  //* Service exceptions
+  GetAllProductsServiceException.code,
+  GetProductByIdServiceException.code,
+  CreateProductServiceException.code,
+  UpdateProductServiceFailedException.code,
+  DeleteProductServiceException.code,
+
+  //* Domain exceptions
   ProductIdCreationFailedException.code,
   ProductNameCreationFailedException.code,
   ProductDescriptionCreationFailedException.code,
   ProductPriceCreationFailedException.code,
   ProductStockCreationFailedException.code,
   InvalidProductUpdateException.code,
-  InvalidProductStateException.code,
-  DeleteProductServiceException.code,
-  ProductBadRequestException.code,
+
+  // ? Orders exceptions
+  // * Service exceptions
+  PlaceOrderServiceException.code,
+  GetAllOrdersServiceException.code,
+  GetOrderByIdServiceException.code,
+  GetOrdersByUserIdServiceException.code,
+  ChangeOrderStatusServiceException.code,
+
+  // * Domain exceptions
+  OrderIdCreationFailedException.code,
+  OrderItemPriceCreationFailedException.code,
+  OrderTotalCreationFailedException.code,
+  OrderProductQuantityCreationFailedException.code,
 ];
 
-const internalServerErrorExceptions: string[] = [
-  GetAllProductsServiceException.code,
-];
+const internalServerErrorExceptions: string[] = [UnexpectedException.code];
 
 const notFoundExceptions: string[] = [ProductNotFoundException.code];
 

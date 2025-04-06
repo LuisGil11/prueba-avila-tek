@@ -8,12 +8,12 @@ import {
   PerformanceDecorator,
   Service,
 } from "@core/application";
-import { PinoLogger } from "@core/infraestructure";
-import { EventEmitterBus } from "@core/infraestructure/event-emitter-bus";
-import { PostgresEventStore } from "@core/infraestructure/postgres-event-store";
+import { HttpResponse, PinoLogger } from "@core/infraestructure";
+import { EventEmitterBus } from "@core/infraestructure/utils/event-emitter-bus";
+import { PostgresEventStore } from "@core/infraestructure/utils/postgres-event-store";
 import { PostgresProductsRepository } from "@app/products/infraestructure/repositories/postgres-products.repository";
 import { InfraCurrencyConverter } from "./services/currency-converter";
-import { UuidGenerator } from "@core/infraestructure/uuid.generator.service";
+import { UuidGenerator } from "@core/infraestructure/utils/uuid.generator.service";
 import { PaginationDto } from "@core/infraestructure/dtos/pagination.dto";
 import { Order } from "../application/responses/order.response";
 import { GetOrdersByUserIdDto } from "./queries/get-orders-by-user-id/dtos/get-orders-by-user-id.dto";
@@ -26,6 +26,10 @@ import { PlaceOrderRequestBody } from "./requests/place-order.request";
 import { ChangeOrderStatusDto } from "../application/commands/change-order-status/dtos/change-order-status.dto";
 import { ChangeOrderStatusResponse } from "../application/commands/change-order-status/responses/change-order-status.response";
 import { ChangeOrderStatusService } from "../application/commands/change-order-status/change-order-status.service";
+import {
+  UnexpectedException,
+  UnexpectedExceptionHandler,
+} from "@core/infraestructure/exceptions/unexpected-error.exception";
 
 export class OrdersController {
   private readonly placeOrderService: Service<
@@ -106,7 +110,7 @@ export class OrdersController {
   @HttpResponseMapper(201)
   async placeOrder(
     req: Request<{}, {}, PlaceOrderRequestBody>,
-    res: Response<PlaceOrderResponse>
+    res: Response<HttpResponse<PlaceOrderResponse>>
   ) {
     try {
       const result = await this.placeOrderService.execute({
@@ -116,35 +120,32 @@ export class OrdersController {
 
       return result;
     } catch (error) {
-      if (error instanceof BaseException) {
-        this.logger.error(error.message, JSON.stringify(error));
-        return Result.makeFail(error as BaseException);
-      }
-      this.logger.warn("Unhandled error was triggered in PlaceOrderService");
-
-      return Result.makeFail(error as BaseException);
+      return UnexpectedExceptionHandler.handle(
+        error,
+        `${this.constructor.name}.placeOrder`
+      );
     }
   }
 
   @HttpResponseMapper(200)
-  async getById(req: Request<{ id: string }>, res: Response<Order>) {
+  async getById(
+    req: Request<{ id: string }>,
+    res: Response<HttpResponse<Order>>
+  ) {
     try {
       return await this.getOrderByIdService.execute(req.params.id);
     } catch (error) {
-      if (error instanceof BaseException) {
-        this.logger.error(error.message, JSON.stringify(error));
-        return Result.makeFail(error as BaseException);
-      }
-      this.logger.warn("Unhandled error was triggered in GetOrderByIdService");
-
-      return Result.makeFail(error as BaseException);
+      return UnexpectedExceptionHandler.handle(
+        error,
+        `${this.constructor.name}.getById`
+      );
     }
   }
 
   @HttpResponseMapper(200)
   async getAll(
     req: Request<{}, {}, {}, { limit: string; offset: string }>,
-    res: Response
+    res: Response<HttpResponse<Order[]>>
   ) {
     try {
       const { limit, offset } = req.query;
@@ -154,20 +155,17 @@ export class OrdersController {
       });
       return result;
     } catch (error) {
-      if (error instanceof BaseException) {
-        this.logger.error(error.message, JSON.stringify(error));
-        return Result.makeFail(error as BaseException);
-      }
-      this.logger.warn("Unhandled error was triggered in GetAllOrdersService");
-
-      return Result.makeFail(error as BaseException);
+      return UnexpectedExceptionHandler.handle(
+        error,
+        `${this.constructor.name}.getAll`
+      );
     }
   }
 
   @HttpResponseMapper(200)
   async getOrdersByUserId(
     req: Request<{}, {}, {}, { limit: string; offset: string }>,
-    res: Response
+    res: Response<HttpResponse<Order[]>>
   ) {
     try {
       const { limit, offset } = req.query;
@@ -179,22 +177,17 @@ export class OrdersController {
       });
       return result;
     } catch (error) {
-      if (error instanceof BaseException) {
-        this.logger.error(error.message, JSON.stringify(error));
-        return Result.makeFail(error as BaseException);
-      }
-      this.logger.warn(
-        "Unhandled error was triggered in GetOrdersByUserIdService"
+      return UnexpectedExceptionHandler.handle(
+        error,
+        `${this.constructor.name}.getOrdersByUserId`
       );
-
-      return Result.makeFail(error as BaseException);
     }
   }
 
   @HttpResponseMapper(202)
   async changeOrderStatus(
     req: Request<{ id: string }, {}, ChangeOrderStatusDto>,
-    res: Response<ChangeOrderStatusResponse>
+    res: Response<HttpResponse<ChangeOrderStatusResponse>>
   ) {
     const { status } = req.body;
     const { id } = req.params;
@@ -206,13 +199,10 @@ export class OrdersController {
       });
       return result;
     } catch (error) {
-      if (error instanceof BaseException) {
-        this.logger.error(error.message, JSON.stringify(error));
-        return Result.makeFail(error as BaseException);
-      }
-      this.logger.warn("Unhandled error was triggered in ChangeStatusService");
-
-      return Result.makeFail(error as BaseException);
+      return UnexpectedExceptionHandler.handle(
+        error,
+        `${this.constructor.name}.changeOrderStatus`
+      );
     }
   }
 }

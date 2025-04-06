@@ -11,13 +11,17 @@ import {
 import { HttpResponse, PinoLogger } from "@core/infraestructure";
 import { HttpResponseMapper } from "@core/infraestructure/decorators";
 import { BaseException, Result } from "@core/utils";
-import { PostgresEventStore } from "@core/infraestructure/postgres-event-store";
-import { UuidGenerator } from "@core/infraestructure/uuid.generator.service";
+import { PostgresEventStore } from "@core/infraestructure/utils/postgres-event-store";
+import { UuidGenerator } from "@core/infraestructure/utils/uuid.generator.service";
 import { JwtService } from "./services";
-import { EventEmitterBus } from "@core/infraestructure/event-emitter-bus";
+import { EventEmitterBus } from "@core/infraestructure/utils/event-emitter-bus";
 import { LoginDto } from "../application/commands/login/login.dto";
 import { AuthorizedResponse } from "../application/commands/response/authorized.response";
 import { LoginService } from "../application/commands/login";
+import {
+  UnexpectedException,
+  UnexpectedExceptionHandler,
+} from "@core/infraestructure/exceptions/unexpected-error.exception";
 
 export class AuthController {
   private readonly registerUserService: Service<
@@ -68,14 +72,15 @@ export class AuthController {
   async register(
     req: Request<{}, {}, CreateUserDto>,
     res: Response<HttpResponse<AuthorizedResponse>>
-  ): Promise<Result<AuthorizedResponse, BaseException>> {
+  ) {
     try {
       const result = await this.registerUserService.execute(req.body);
       return result;
     } catch (error) {
-      this.logger.warn("Unandled error was triggered in RegisterUserService");
-      this.logger.warn(JSON.stringify(error));
-      return Result.makeFail(error as BaseException);
+      return UnexpectedExceptionHandler.handle(
+        error,
+        `${this.constructor.name}.register`
+      );
     }
   }
 
@@ -83,14 +88,15 @@ export class AuthController {
   async login(
     req: Request<{}, {}, LoginDto>,
     res: Response<HttpResponse<AuthorizedResponse>>
-  ): Promise<Result<AuthorizedResponse, BaseException>> {
+  ) {
     try {
       const result = await this.loginService.execute(req.body);
       return result;
     } catch (error) {
-      this.logger.warn("Unandled error was triggered in LoginService");
-      this.logger.warn(JSON.stringify(error));
-      return Result.makeFail(error as BaseException);
+      return UnexpectedExceptionHandler.handle(
+        error,
+        `${this.constructor.name}.login`
+      );
     }
   }
 }

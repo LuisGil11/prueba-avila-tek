@@ -117,13 +117,6 @@ export class Product extends AggregateRoot<ProductId> {
   }
 }
 
-export class InvalidProductStateException extends BaseException {
-  static code = "INVALID_PRODUCT_STATE";
-
-  constructor(message: string) {
-    super(message, InvalidProductStateException.code);
-  }
-}
 export class InvalidProductUpdateException extends BaseException {
   static code = "INVALID_PRODUCT_UPDATE";
 

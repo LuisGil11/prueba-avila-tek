@@ -16,6 +16,7 @@ import {
 import { User as DomainUser } from "@app/auth/domain/user";
 import { EventBus } from "@core/domain/event-bus";
 import { AuthorizedResponse } from "../response/authorized.response";
+import { UnexpectedExceptionHandler } from "@core/infraestructure/exceptions/unexpected-error.exception";
 
 export class RegisterUserService
   implements Service<CreateUserDto, AuthorizedResponse>
@@ -111,18 +112,7 @@ export class RegisterUserService
         token,
       });
     } catch (error) {
-      if (error instanceof BaseException) {
-        return Result.makeFail(error);
-      } else {
-        console.log("Error in register user service", error);
-        return Result.makeFail(
-          new RegisterUserServiceFailedException(
-            "An unexpected error occurred",
-            RegisterUserServiceFailedExceptionCodes.USER_CREATION_FAILED,
-            error as BaseException
-          )
-        );
-      }
+      return UnexpectedExceptionHandler.handle(error, this.name);
     }
   }
 }

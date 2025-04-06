@@ -4,6 +4,7 @@ import { Order } from "../../../application/responses/order.response";
 import { OrdersRepository } from "@app/orders/application/repositories/orders.repository";
 import { Result, BaseException } from "@core/utils";
 import { OrderNotFoundException } from "@app/orders/application/exceptions/order-not-found.exception";
+import { UnexpectedExceptionHandler } from "@core/infraestructure/exceptions/unexpected-error.exception";
 
 export class GetAllOrdersService implements Service<PaginationDto, Order[]> {
   constructor(private readonly ordersRepository: OrdersRepository) {}
@@ -23,11 +24,7 @@ export class GetAllOrdersService implements Service<PaginationDto, Order[]> {
 
       return Result.makeOk(orders.unwrap());
     } catch (error) {
-      return Result.makeFail(
-        new GetAllOrdersServiceException(
-          "An error occurred while fetching orders"
-        )
-      );
+      return UnexpectedExceptionHandler.handle(error, this.name);
     }
   }
 }

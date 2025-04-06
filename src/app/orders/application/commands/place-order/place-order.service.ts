@@ -19,6 +19,7 @@ import { UserId } from "@app/auth/domain/value-objects";
 import { Order } from "@app/orders/domain/order";
 import { Currencies } from "@app/orders/domain/enum/currencies";
 import { OrderStatus } from "@app/orders/domain/value-objects/status";
+import { UnexpectedExceptionHandler } from "@core/infraestructure/exceptions/unexpected-error.exception";
 
 export class PlaceOrderService
   implements Service<PlaceOrderDto, PlaceOrderResponse>
@@ -123,14 +124,7 @@ export class PlaceOrderService
         },
       });
     } catch (error) {
-      if (error instanceof BaseException) {
-        return Result.makeFail(error);
-      }
-      return Result.makeFail(
-        new PlaceOrderServiceException(
-          `An unexpected error occurred while placing the order`
-        )
-      );
+      return UnexpectedExceptionHandler.handle(error, this.name);
     }
   }
 }

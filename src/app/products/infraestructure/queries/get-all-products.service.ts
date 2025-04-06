@@ -2,6 +2,7 @@ import { ProductsRepository } from "@app/products/application/repositories/produ
 import { Product } from "@app/products/types/product";
 import { Service } from "@core/application";
 import { PaginationDto } from "@core/infraestructure/dtos/pagination.dto";
+import { UnexpectedExceptionHandler } from "@core/infraestructure/exceptions/unexpected-error.exception";
 import { BaseException, Result } from "@core/utils";
 
 export class GetAllProductsService
@@ -20,12 +21,7 @@ export class GetAllProductsService
 
       return Result.makeOk(products.unwrap());
     } catch (error) {
-      return Result.makeFail(
-        new GetAllProductsServiceException(
-          "An unexpected Error happened while retrieving products",
-          error as BaseException
-        )
-      );
+      return UnexpectedExceptionHandler.handle(error, this.name);
     }
   }
 }

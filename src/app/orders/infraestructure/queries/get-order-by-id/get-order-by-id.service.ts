@@ -2,6 +2,7 @@ import { OrderNotFoundException } from "@app/orders/application/exceptions/order
 import { OrdersRepository } from "@app/orders/application/repositories/orders.repository";
 import { Order } from "@app/orders/application/responses/order.response";
 import { Service } from "@core/application";
+import { UnexpectedExceptionHandler } from "@core/infraestructure/exceptions/unexpected-error.exception";
 import { Result, BaseException } from "@core/utils";
 
 export class GetOrderByIdService implements Service<string, Order> {
@@ -21,15 +22,7 @@ export class GetOrderByIdService implements Service<string, Order> {
 
       return Result.makeOk(order.unwrap());
     } catch (error) {
-      if (error instanceof BaseException) {
-        return Result.makeFail(error as BaseException);
-      }
-
-      return Result.makeFail(
-        new GetOrderByIdServiceException(
-          `An unexpected error occurred while fetching the order`
-        )
-      );
+      return UnexpectedExceptionHandler.handle(error, this.name);
     }
   }
 }

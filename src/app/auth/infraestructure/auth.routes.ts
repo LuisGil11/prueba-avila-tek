@@ -1,7 +1,8 @@
-import { Router } from "express";
 import { validate } from "@core/infraestructure/middleware";
 import { AuthController } from "./auth.controller";
 import { loginSchema, registerSchema } from "./schemas";
+import { Router } from "express";
+import { ControllerAdapter } from "@core/infraestructure/utils/controller.adapter";
 
 const router = Router();
 const authController = new AuthController();
@@ -9,13 +10,17 @@ const authController = new AuthController();
 router.post(
   "/",
   validate(registerSchema),
-  authController.register.bind(authController)
+  ControllerAdapter.adaptControllerToExpress(
+    authController.register.bind(authController)
+  )
 );
 
 router.post(
   "/login",
   validate(loginSchema),
-  authController.login.bind(authController)
+  ControllerAdapter.adaptControllerToExpress(
+    authController.login.bind(authController)
+  )
 );
 
 export default router;

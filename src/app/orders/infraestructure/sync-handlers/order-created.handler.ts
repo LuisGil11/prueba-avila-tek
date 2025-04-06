@@ -1,6 +1,6 @@
 import { OrderCreated } from "@app/orders/domain/events/order-created.event";
 import { PinoLogger } from "@core/infraestructure";
-import { EventEmitterBus } from "@core/infraestructure/event-emitter-bus";
+import { EventEmitterBus } from "@core/infraestructure/utils/event-emitter-bus";
 import { OrderDetail, PrismaClient } from "@prisma/client";
 
 const eventBus = EventEmitterBus.getInstance();

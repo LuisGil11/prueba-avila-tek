@@ -2,6 +2,7 @@ import { ProductNotFoundException } from "@app/products/application/exceptions";
 import { ProductsRepository } from "@app/products/application/repositories/product.repository";
 import { Product } from "@app/products/types/product";
 import { Service } from "@core/application";
+import { UnexpectedExceptionHandler } from "@core/infraestructure/exceptions/unexpected-error.exception";
 import { Result, BaseException } from "@core/utils";
 
 export class GetProductByIdService implements Service<string, Product> {
@@ -21,12 +22,7 @@ export class GetProductByIdService implements Service<string, Product> {
 
       return Result.makeOk(product.unwrap());
     } catch (error) {
-      return Result.makeFail(
-        new GetProductByIdServiceException(
-          "An unexpected Error happened while retrieving the product",
-          error as BaseException
-        )
-      );
+      return UnexpectedExceptionHandler.handle(error, this.name);
     }
   }
 }

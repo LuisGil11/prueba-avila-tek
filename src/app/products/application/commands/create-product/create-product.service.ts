@@ -14,6 +14,7 @@ import {
 import { Product } from "@app/products/domain/product";
 import { EventBus } from "@core/domain/event-bus";
 import { Currencies } from "@app/orders/domain/enum/currencies";
+import { UnexpectedExceptionHandler } from "@core/infraestructure/exceptions/unexpected-error.exception";
 
 export class CreateProductService
   implements Service<CreateProductDto, CreateProductResponse>
@@ -78,16 +79,7 @@ export class CreateProductService
         },
       });
     } catch (error) {
-      if (error instanceof BaseException) {
-        return Result.makeFail(error);
-      } else {
-        return Result.makeFail(
-          new CreateProductServiceException(
-            "An unexpected error occurred while creating the product",
-            error as BaseException
-          )
-        );
-      }
+      return UnexpectedExceptionHandler.handle(error, this.name);
     }
   }
 }

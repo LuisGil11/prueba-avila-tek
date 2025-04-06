@@ -14,6 +14,7 @@ import {
   ProductStock,
 } from "@app/products/domain/value-objects";
 import { ProductNotFoundException } from "../../exceptions";
+import { UnexpectedExceptionHandler } from "@core/infraestructure/exceptions/unexpected-error.exception";
 
 export class UpdateProductService
   implements Service<UpdateProductDto, UpdateProductResponse>
@@ -81,18 +82,7 @@ export class UpdateProductService
         },
       });
     } catch (error) {
-      if (error instanceof BaseException) {
-        return Result.makeFail(error);
-      } else {
-        console.log({ error });
-
-        return Result.makeFail(
-          new UpdateProductServiceFailedException(
-            "Unknown error occured when updating product",
-            error as BaseException
-          )
-        );
-      }
+      return UnexpectedExceptionHandler.handle(error, this.name);
     }
   }
 }

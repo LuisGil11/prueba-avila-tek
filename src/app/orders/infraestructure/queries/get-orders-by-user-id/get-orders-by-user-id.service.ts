@@ -4,6 +4,7 @@ import { Order } from "@app/orders/application/responses/order.response";
 import { OrdersRepository } from "@app/orders/application/repositories/orders.repository";
 import { Result, BaseException } from "@core/utils";
 import { OrderNotFoundException } from "@app/orders/application/exceptions/order-not-found.exception";
+import { UnexpectedExceptionHandler } from "@core/infraestructure/exceptions/unexpected-error.exception";
 
 export class GetOrdersByUserIdService
   implements Service<GetOrdersByUserIdDto, Order[]>
@@ -30,13 +31,7 @@ export class GetOrdersByUserIdService
 
       return Result.makeOk(orders.unwrap());
     } catch (error) {
-      if (error instanceof BaseException) {
-        return Result.makeFail(error as BaseException);
-      }
-
-      return Result.makeFail(
-        new GetOrdersByUserIdServiceException("Error getting orders by user id")
-      );
+      return UnexpectedExceptionHandler.handle(error, this.name);
     }
   }
 }

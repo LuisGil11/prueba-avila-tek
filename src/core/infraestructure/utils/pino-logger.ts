@@ -1,5 +1,5 @@
 import pino, { Logger } from "pino";
-import { ILogger } from "../application/ilogger.service";
+import { ILogger } from "../../application/ilogger.service";
 
 export class PinoLogger implements ILogger {
   private static instance: PinoLogger;

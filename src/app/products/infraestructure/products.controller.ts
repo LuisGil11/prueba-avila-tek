@@ -11,20 +11,16 @@ import {
   Service,
 } from "@core/application";
 import { CreateProductService } from "../application/commands/create-product/create-product.service";
-import { EventEmitterBus } from "@core/infraestructure/event-emitter-bus";
-import { PostgresEventStore } from "@core/infraestructure/postgres-event-store";
-import { UuidGenerator } from "@core/infraestructure/uuid.generator.service";
-import { BaseException, Result } from "@core/utils";
+import { EventEmitterBus } from "@core/infraestructure/utils/event-emitter-bus";
+import { PostgresEventStore } from "@core/infraestructure/utils/postgres-event-store";
+import { UuidGenerator } from "@core/infraestructure/utils/uuid.generator.service";
 import {
   UpdateProductDto,
   UpdateProductResponse,
   UpdateProductService,
 } from "../application/commands/update-product";
 import { PostgresProductsRepository } from "./repositories/postgres-products.repository";
-import {
-  UpdateProductRequestBody,
-  UpdateProductRequestParams,
-} from "./requests/update-product.request";
+import { UpdateProductRequestBody } from "./requests/update-product.request";
 import { PaginationDto } from "@core/infraestructure/dtos/pagination.dto";
 import { GetAllProductsService } from "./queries/get-all-products.service";
 import { Product } from "../types/product";
@@ -34,7 +30,7 @@ import {
   DeleteProductResponse,
   DeleteProductService,
 } from "../application/commands/delete-product";
-import { ProductBadRequestException } from "../application/exceptions/product-bad-request.exception";
+import { UnexpectedExceptionHandler } from "@core/infraestructure/exceptions/unexpected-error.exception";
 
 export class ProductsController {
   private readonly createProductService: Service<
@@ -112,19 +108,17 @@ export class ProductsController {
   }
 
   @HttpResponseMapper(200)
-  async getById(req: Request<{ id: string }>, res: Response) {
+  async getById(
+    req: Request<{ id: string }>,
+    res: Response<HttpResponse<Product>>
+  ) {
     try {
       return await this.getProductById.execute(req.params.id);
     } catch (error) {
-      if (error instanceof BaseException) {
-        this.logger.error(error.message, JSON.stringify(error));
-        return Result.makeFail(error as BaseException);
-      }
-      this.logger.warn(
-        "Unhandled error was triggered in GetAllProductsService"
+      return UnexpectedExceptionHandler.handle(
+        error,
+        `${this.constructor.name}.getById`
       );
-
-      return Result.makeFail(error as BaseException);
     }
   }
   @HttpResponseMapper(200)
@@ -140,15 +134,10 @@ export class ProductsController {
       });
       return result;
     } catch (error) {
-      if (error instanceof BaseException) {
-        this.logger.error(error.message, JSON.stringify(error));
-        return Result.makeFail(error as BaseException);
-      }
-      this.logger.warn(
-        "Unhandled error was triggered in GetAllProductsService"
+      return UnexpectedExceptionHandler.handle(
+        error,
+        `${this.constructor.name}.getAll`
       );
-
-      return Result.makeFail(error as BaseException);
     }
   }
 
@@ -161,9 +150,10 @@ export class ProductsController {
       const result = await this.createProductService.execute(req.body);
       return result;
     } catch (error) {
-      this.logger.warn("Unhandled error was triggered in CreateProductService");
-      this.logger.warn(JSON.stringify(error));
-      return Result.makeFail(error as BaseException);
+      return UnexpectedExceptionHandler.handle(
+        error,
+        `${this.constructor.name}.create`
+      );
     }
   }
 
@@ -181,9 +171,10 @@ export class ProductsController {
       const result = await this.updateProductService.execute(dto);
       return result;
     } catch (error) {
-      this.logger.warn("Unhandled error was triggered in CreateProductService");
-      this.logger.warn(JSON.stringify(error));
-      return Result.makeFail(error as BaseException);
+      return UnexpectedExceptionHandler.handle(
+        error,
+        `${this.constructor.name}.update`
+      );
     }
   }
 
@@ -198,9 +189,10 @@ export class ProductsController {
       const result = await this.deleteProductService.execute({ id });
       return result;
     } catch (error) {
-      this.logger.warn("Unhandled error was triggered in CreateProductService");
-      this.logger.warn(JSON.stringify(error));
-      return Result.makeFail(error as BaseException);
+      return UnexpectedExceptionHandler.handle(
+        error,
+        `${this.constructor.name}.delete`
+      );
     }
   }
 }

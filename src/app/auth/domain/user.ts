@@ -66,7 +66,7 @@ export class User extends AggregateRoot<UserId> {
 
   protected validateState(): void {
     if (!this._name || !this._password || !this._email || !this._role)
-      throw new InvalidUserStateException("User state is invalid");
+      throw new Error("User state is invalid");
   }
 
   static laodFromHistory(id: UserId, events: DomainEvent[]): User {
@@ -75,13 +75,5 @@ export class User extends AggregateRoot<UserId> {
     user.validateState();
 
     return user;
-  }
-}
-
-export class InvalidUserStateException extends BaseException {
-  static code = "INVALID_USER_STATE";
-
-  constructor(message: string) {
-    super(message, InvalidUserStateException.code);
   }
 }

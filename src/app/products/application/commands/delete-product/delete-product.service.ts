@@ -4,6 +4,7 @@ import { DeleteProductResponse } from "./response/delete-product.response";
 import { Result, BaseException } from "@core/utils";
 import { ProductsRepository } from "../../repositories/product.repository";
 import { ProductNotFoundException } from "../../exceptions";
+import { UnexpectedExceptionHandler } from "@core/infraestructure/exceptions/unexpected-error.exception";
 
 export class DeleteProductService
   implements Service<DeleteProductDto, DeleteProductResponse>
@@ -37,16 +38,7 @@ export class DeleteProductService
 
       return Result.makeOk(product.unwrap());
     } catch (error) {
-      if (error instanceof BaseException) {
-        return Result.makeFail(error);
-      } else {
-        return Result.makeFail(
-          new DeleteProductServiceException(
-            `Error deleting product with id ${id}`,
-            error as BaseException
-          )
-        );
-      }
+      return UnexpectedExceptionHandler.handle(error, this.name);
     }
   }
 }

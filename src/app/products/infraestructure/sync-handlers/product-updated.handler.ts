@@ -1,6 +1,6 @@
 import { ProductUpdated } from "@app/products/domain/events/product-updated.event";
 import { PinoLogger } from "@core/infraestructure";
-import { EventEmitterBus } from "@core/infraestructure/event-emitter-bus";
+import { EventEmitterBus } from "@core/infraestructure/utils/event-emitter-bus";
 import { PrismaClient } from "@prisma/client";
 
 const eventBus = EventEmitterBus.getInstance();
