@@ -10,6 +10,7 @@ import { ProductCreated } from "./events/product-created.event";
 import { BaseException } from "@core/utils";
 import { DomainEvent } from "@core/domain/domain-event";
 import { ProductUpdated } from "./events/product-updated.event";
+import { ProductOrdered } from "./events";
 
 export class Product extends AggregateRoot<ProductId> {
   _name?: ProductName;
@@ -40,6 +41,37 @@ export class Product extends AggregateRoot<ProductId> {
       )
     );
     return product;
+  }
+
+  order({
+    orderedAmount,
+    unit,
+  }: {
+    orderedAmount: number;
+    unit: string;
+  }): void {
+    const quantity = ProductStock.create({
+      unit,
+      quantity: orderedAmount,
+    });
+
+    if (!this._stock) {
+      throw new Error("Product stock is not defined");
+    }
+
+    if (quantity.value.unit !== this._stock.value.unit) {
+      throw new UnitNotMatchException(
+        "Product stock unit does not match the order quantity unit"
+      );
+    }
+
+    if (this._stock?.value.quantity! - quantity.value.quantity < 0) {
+      throw new InsufficientStockException(
+        "Insufficient stock to fulfill the order"
+      );
+    }
+
+    this.apply(new ProductOrdered(this.id.value, this.version, quantity.value));
   }
 
   update(
@@ -102,6 +134,15 @@ export class Product extends AggregateRoot<ProductId> {
     if (context.stock) this._stock = ProductStock.create(context.stock);
   }
 
+  [`on${ProductOrdered.name}`](event: ProductOrdered): void {
+    if (this._stock) {
+      this._stock = ProductStock.create({
+        unit: this._stock.value.unit,
+        quantity: this._stock.value.quantity - event.quantity.quantity,
+      });
+    }
+  }
+
   protected validateState(): void {
     if (!this._name || !this._description || !this._price || !this._stock) {
       throw new Error("Product state is invalid");
@@ -122,5 +163,21 @@ export class InvalidProductUpdateException extends BaseException {
 
   constructor(message: string) {
     super(message, InvalidProductUpdateException.code);
+  }
+}
+
+export class InsufficientStockException extends BaseException {
+  static code = "INSUFFICIENT_STOCK";
+
+  constructor(message: string) {
+    super(message, InsufficientStockException.code);
+  }
+}
+
+export class UnitNotMatchException extends BaseException {
+  static code = "UNIT_NOT_MATCH";
+
+  constructor(message: string) {
+    super(message, UnitNotMatchException.code);
   }
 }

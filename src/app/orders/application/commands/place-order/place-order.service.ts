@@ -20,6 +20,7 @@ import { Order } from "@app/orders/domain/order";
 import { Currencies } from "@app/orders/domain/enum/currencies";
 import { OrderStatus } from "@app/orders/domain/value-objects/status";
 import { UnexpectedExceptionHandler } from "@core/infraestructure/exceptions/unexpected-error.exception";
+import { Product } from "@app/products/domain/product";
 
 export class PlaceOrderService
   implements Service<PlaceOrderDto, PlaceOrderResponse>
@@ -67,6 +68,23 @@ export class PlaceOrderService
         );
       }
 
+      const domainProducts: Product[] = [];
+
+      for (const item of existingProducts) {
+        const productHistory = await this.eventStore.get(item.id);
+        const product = Product.loadFromHistory(
+          ProductId.create(item.id),
+          productHistory
+        );
+
+        product.order({
+          orderedAmount: items.find((i) => i.id === item.id)!.quantity,
+          unit: item.stock.unit,
+        });
+
+        domainProducts.push(product);
+      }
+
       const id = this.idGenerator.generate();
 
       const orderId = OrderId.create(id);
@@ -98,7 +116,14 @@ export class PlaceOrderService
 
       this.eventStore.append(orderId.value, events);
 
-      this.eventBus.publish(events[0], orderId.value);
+      this.eventBus.publish(events, orderId.value);
+
+      domainProducts.forEach((product) => {
+        const events = product.pullEvents();
+
+        this.eventStore.append(product.id.value, events);
+        this.eventBus.publish(events, product.id.value);
+      });
 
       return Result.makeOk({
         orderId: orderId.value,

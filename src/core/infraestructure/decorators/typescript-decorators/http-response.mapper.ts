@@ -24,7 +24,11 @@ import { CreateProductServiceException } from "@app/products/application/command
 import { DeleteProductServiceException } from "@app/products/application/commands/delete-product";
 import { UpdateProductServiceFailedException } from "@app/products/application/commands/update-product";
 import { ProductNotFoundException } from "@app/products/application/exceptions";
-import { InvalidProductUpdateException } from "@app/products/domain/product";
+import {
+  InsufficientStockException,
+  InvalidProductUpdateException,
+  UnitNotMatchException,
+} from "@app/products/domain/product";
 import {
   ProductDescriptionCreationFailedException,
   ProductIdCreationFailedException,
@@ -122,6 +126,11 @@ const badRequestExceptions: string[] = [
 
 const internalServerErrorExceptions: string[] = [UnexpectedException.code];
 
+const conflictExceptions: string[] = [
+  UnitNotMatchException.code,
+  InsufficientStockException.code,
+];
+
 const notFoundExceptions: string[] = [
   ProductNotFoundException.code,
   OrderNotFoundException.code,
@@ -134,6 +143,10 @@ const errorMapper = (errorCode: string) => {
 
   if (notFoundExceptions.includes(errorCode)) {
     return 404;
+  }
+
+  if (conflictExceptions.includes(errorCode)) {
+    return 409;
   }
 
   if (internalServerErrorExceptions.includes(errorCode)) {

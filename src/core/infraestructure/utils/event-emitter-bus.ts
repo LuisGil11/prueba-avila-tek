@@ -15,8 +15,15 @@ export class EventEmitterBus implements EventBus {
     this.eventEmitter.on(event, handle);
   }
 
-  publish(event: unknown, providerId?: string): void {
-    this.eventEmitter.emit((event as DomainEvent).eventName, event, providerId);
+  publish(event: DomainEvent | DomainEvent[], providerId?: string): void {
+    if (Array.isArray(event)) {
+      event.forEach((e) => {
+        this.eventEmitter.emit(e.eventName, e, providerId);
+      });
+      return;
+    }
+
+    this.eventEmitter.emit(event.eventName, event, providerId);
   }
 
   static getInstance(): EventEmitterBus {
