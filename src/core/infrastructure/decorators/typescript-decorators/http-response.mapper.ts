@@ -1,4 +1,7 @@
-import { LoginServiceFailedException } from "@app/auth/application/commands/login";
+import {
+  LoginServiceFailedException,
+  LoginServiceUserNotFoundException,
+} from "@app/auth/application/commands/login";
 import { RegisterUserServiceFailedExceptionCodes } from "@app/auth/application/commands/register";
 import {
   UserIdCreationFailedException,
@@ -134,6 +137,7 @@ const conflictExceptions: string[] = [
 const notFoundExceptions: string[] = [
   ProductNotFoundException.code,
   OrderNotFoundException.code,
+  LoginServiceUserNotFoundException.code,
 ];
 
 const errorMapper = (errorCode: string) => {

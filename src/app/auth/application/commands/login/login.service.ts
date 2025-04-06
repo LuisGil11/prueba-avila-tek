@@ -25,7 +25,9 @@ export class LoginService implements Service<LoginDto, AuthorizedResponse> {
 
       if (!userResult.hasValue) {
         return Result.makeFail(
-          new LoginServiceFailedException("There is no user with this email")
+          new LoginServiceUserNotFoundException(
+            "There is no user with this email"
+          )
         );
       }
 
@@ -64,5 +66,13 @@ export class LoginServiceFailedException extends BaseException {
 
   constructor(message: string, cause?: BaseException) {
     super(message, LoginServiceFailedException.code, cause);
+  }
+}
+
+export class LoginServiceUserNotFoundException extends BaseException {
+  static code = "LOGIN_SERVICE_USER_NOT_FOUND_EXCEPTION";
+
+  constructor(message: string, cause?: BaseException) {
+    super(message, LoginServiceUserNotFoundException.code, cause);
   }
 }
