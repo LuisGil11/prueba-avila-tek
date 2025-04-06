@@ -14,14 +14,12 @@ import { PostgresEventStore } from "@core/infraestructure/utils/postgres-event-s
 import { PostgresProductsRepository } from "@app/products/infraestructure/repositories/postgres-products.repository";
 import { InfraCurrencyConverter } from "./services/currency-converter";
 import { UuidGenerator } from "@core/infraestructure/utils/uuid.generator.service";
-import { PaginationDto } from "@core/infraestructure/dtos/pagination.dto";
 import { Order } from "../application/responses/order.response";
 import { GetOrdersByUserIdDto } from "./queries/get-orders-by-user-id/dtos/get-orders-by-user-id.dto";
 import { GetAllOrdersService, GetOrderByIdService } from "./queries";
 import { PostgresOrdersRepository } from "./repositories/postgres-orders.repository";
 import { OrdersRepository } from "../application/repositories/orders.repository";
 import { GetOrdersByUserIdService } from "./queries/get-orders-by-user-id/get-orders-by-user-id.service";
-import { BaseException, Result } from "@core/utils";
 import { PlaceOrderRequestBody } from "./requests/place-order.request";
 import { ChangeOrderStatusDto } from "../application/commands/change-order-status/dtos/change-order-status.dto";
 import { ChangeOrderStatusResponse } from "../application/commands/change-order-status/responses/change-order-status.response";
@@ -30,6 +28,8 @@ import {
   UnexpectedException,
   UnexpectedExceptionHandler,
 } from "@core/infraestructure/exceptions/unexpected-error.exception";
+import { OrderStatus } from "../domain/value-objects/status";
+import { GetAllOrdersDto } from "./queries/dtos/get-all-orders.dto";
 
 export class OrdersController {
   private readonly placeOrderService: Service<
@@ -37,7 +37,7 @@ export class OrdersController {
     PlaceOrderResponse
   >;
 
-  private readonly getAllOrdersService: Service<PaginationDto, Order[]>;
+  private readonly getAllOrdersService: Service<GetAllOrdersDto, Order[]>;
   private readonly getOrdersByUserIdService: Service<
     GetOrdersByUserIdDto,
     Order[]
@@ -144,14 +144,20 @@ export class OrdersController {
 
   @HttpResponseMapper(200)
   async getAll(
-    req: Request<{}, {}, {}, { limit: string; offset: string }>,
+    req: Request<
+      {},
+      {},
+      {},
+      { limit: string; offset: string; status?: OrderStatus }
+    >,
     res: Response<HttpResponse<Order[]>>
   ) {
     try {
-      const { limit, offset } = req.query;
+      const { limit, offset, status } = req.query;
       const result = await this.getAllOrdersService.execute({
         limit: Number(limit) || 10,
         offset: Number(offset) || 0,
+        status,
       });
       return result;
     } catch (error) {
@@ -164,16 +170,22 @@ export class OrdersController {
 
   @HttpResponseMapper(200)
   async getOrdersByUserId(
-    req: Request<{}, {}, {}, { limit: string; offset: string }>,
+    req: Request<
+      {},
+      {},
+      {},
+      { limit: string; offset: string; status?: OrderStatus }
+    >,
     res: Response<HttpResponse<Order[]>>
   ) {
     try {
-      const { limit, offset } = req.query;
+      const { limit, offset, status } = req.query;
       const userId = res.locals.userId;
       const result = await this.getOrdersByUserIdService.execute({
         limit: Number(limit) || 10,
         offset: Number(offset) || 0,
         id: userId,
+        status,
       });
       return result;
     } catch (error) {

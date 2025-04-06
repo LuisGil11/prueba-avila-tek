@@ -1,22 +1,26 @@
 import { Service } from "@core/application";
-import { PaginationDto } from "@core/infraestructure/dtos/pagination.dto";
 import { Order } from "../../../application/responses/order.response";
 import { OrdersRepository } from "@app/orders/application/repositories/orders.repository";
 import { Result, BaseException } from "@core/utils";
 import { OrderNotFoundException } from "@app/orders/application/exceptions/order-not-found.exception";
 import { UnexpectedExceptionHandler } from "@core/infraestructure/exceptions/unexpected-error.exception";
+import { GetAllOrdersDto } from "../dtos/get-all-orders.dto";
 
-export class GetAllOrdersService implements Service<PaginationDto, Order[]> {
+export class GetAllOrdersService implements Service<GetAllOrdersDto, Order[]> {
   constructor(private readonly ordersRepository: OrdersRepository) {}
   name: string = this.constructor.name;
 
   async execute(
-    request: PaginationDto
+    request: GetAllOrdersDto
   ): Promise<Result<Order[], BaseException>> {
-    const { limit = 10, offset = 0 } = request;
+    const { limit = 10, offset = 0, status = undefined } = request;
 
     try {
-      const orders = await this.ordersRepository.getAllOrders(limit, offset);
+      const orders = await this.ordersRepository.getAllOrders(
+        limit,
+        offset,
+        status
+      );
 
       if (!orders.hasValue) {
         return Result.makeFail(new OrderNotFoundException("No orders found"));

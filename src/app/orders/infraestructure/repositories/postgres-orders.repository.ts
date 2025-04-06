@@ -14,12 +14,14 @@ export class PostgresOrdersRepository implements OrdersRepository {
   async getAllOrders(
     limit: number,
     offset: number,
+    status?: OrderStatus,
     userId?: string
   ): Promise<Optional<Order[]>> {
     try {
       const orders = await this.prisma.order.findMany({
         where: {
           userId: userId ? userId : undefined,
+          status: status ? status : undefined,
         },
         include: {
           OrderDetail: {

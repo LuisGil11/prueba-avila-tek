@@ -16,12 +16,13 @@ export class GetOrdersByUserIdService
   async execute(
     request: GetOrdersByUserIdDto
   ): Promise<Result<Order[], BaseException>> {
-    const { id, limit = 10, offset = 0 } = request;
+    const { id, limit = 10, offset = 0, status = undefined } = request;
 
     try {
       const orders = await this.ordersRepository.getAllOrders(
         limit,
         offset,
+        status,
         id
       );
 
