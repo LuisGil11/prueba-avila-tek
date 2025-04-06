@@ -1,24 +1,24 @@
-# 🏔️ Prueba Avila Tek
+# 🏔️ Prueba Técnica – Avila Tek
 
-¡Bienvenido a la **Prueba Avila Tek**! Este proyecto es una aplicación basada en Node.js y Express que utiliza una base de datos PostgreSQL. A continuación, encontrarás las instrucciones para configurar y ejecutar el proyecto correctamente.
+### ¡Bienvenido a la **Prueba Técnica de Avila Tek**!
+
+#### Este proyecto es una API desarrollada con **Node.js**, **Express** y **PostgreSQL**, enfocada en buenas prácticas de arquitectura, seguridad y escalabilidad.
 
 ---
 
 ## 🚀 Requisitos
 
-Antes de comenzar, asegúrate de tener instalados los siguientes programas en tu sistema:
+Antes de comenzar, asegúrate de tener instalado:
 
-- **Docker** y **Docker Compose**: Para ejecutar los contenedores.
-- **Node.js** (versión 22 o superior): Para desarrollo local (opcional si usas Docker).
-- **npm**: Para manejar las dependencias del proyecto.
+- 🐳 **Docker** y **Docker Compose** – Para ejecutar los contenedores.
+- 🔧 **Node.js** `v22+` (opcional si usas Docker).
+- 📦 **npm** – Para manejar las dependencias del proyecto.
 
 ---
 
 ## 🛠️ Configuración del Proyecto
 
 ### 1. Clonar el Repositorio
-
-Clona este repositorio en tu máquina local:
 
 ```bash
 git clone <URL_DEL_REPOSITORIO>
@@ -27,22 +27,76 @@ cd prueba-avilatek
 
 ### 2. Configurar Variables de Entorno
 
-Copia el archivo template.env y renómbralo como .env. Luego, edita las variables según tu configuración
+Copia el archivo `.template.env` y renómbralo como `.env`. Luego edita las variables necesarias:
 
-## 🐳 Montar el Proyecto con Docker
-
-### 1. Construir y Levantar los Contenedores
-
-Ejecuta el siguiente comando para construir y levantar los contenedores de Docker:
-
+```bash
+cp .template.env .env
 ```
+
+---
+
+## 🐳 Levantar la Aplicación con Docker
+
+### 1. Construir y Ejecutar los Contenedores
+
+```bash
 docker-compose up --build
 ```
 
+Esto iniciará la aplicación y la base de datos en sus respectivos contenedores.
+
+---
+
 ## ▶️ Iniciar la Aplicación
 
-#### **Una vez iniciada la aplicación y tengas el servidor corriendo. DIrigete a la documentación en Postman**
+Una vez la aplicación esté corriendo, puedes acceder a la documentación de la API en Postman:
 
-### 1. Ejecutar el Seed
+🔗 [**Documentación en Postman**](https://documenter.getpostman.com/view/30131537/2sB2cUC3sF)
 
-Antes de usar la aplicación, es necesario ejecutar el seed para poblar la base de datos con datos iniciales. Accede al contenedor de la aplicación y ejecuta el seed:
+> 👉 Abre la colección en Postman Web o Desktop desde el botón en la esquina superior derecha.
+
+---
+
+## 🌱 Ejecutar el Seed
+
+Para poblar la base de datos con datos iniciales, accede al contenedor de la aplicación y ejecuta el comando de seed:
+
+```bash
+docker exec -it <nombre_del_contenedor_app> npm run seed
+```
+
+> Reemplaza `<nombre_del_contenedor_app>` por el nombre correcto según tu `docker-compose.yml`.
+
+---
+
+## ✅ ¡Todo Listo!
+
+Con la base de datos inicializada, ya puedes comenzar a probar la API desde Postman o cualquier cliente HTTP.
+
+---
+
+## 🧱 Arquitectura y Patrones
+
+Esta API está construida utilizando:
+
+- **Arquitectura Hexagonal**
+- **Domain-Driven Design (DDD)**
+- **CQRS (Command Query Responsibility Segregation)**
+
+### 🔄 Hexagonal Architecture
+
+Organizada por **puertos y adaptadores**, lo que permite mantener un núcleo de dominio limpio e independiente.
+
+### 🧠 DDD + CQRS
+
+- **Comandos** → ejecutan casos de uso y modifican el estado.
+- **Consultas** → acceden a un _read model_ optimizado.
+- **Agregados** → encapsulan lógica de negocio y reglas del dominio.
+
+### 📣 Eventos de Dominio
+
+Se disparan desde el núcleo tras ciertas operaciones (`OrderCreated`, `StockDecreased`, etc.) y actualizan los modelos de lectura para mantener **consistencia eventual** entre escritura y lectura.
+
+---
+
+> Desarrollado con ❤️ para demostrar buenas prácticas de backend en entornos reales.
