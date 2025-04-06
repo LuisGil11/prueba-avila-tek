@@ -5,5 +5,6 @@ export default object({
     name: string().required(),
     email: string().email("email must be a valid email").required(),
     password: string().required(),
+    role: string().optional().default("USER").oneOf(["USER", "ADMIN"]),
   }),
 });

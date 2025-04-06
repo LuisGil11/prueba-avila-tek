@@ -25,7 +25,7 @@ export class LoginService implements Service<LoginDto, AuthorizedResponse> {
 
       if (!userResult.hasValue) {
         return Result.makeFail(
-          new LoginServiceFailedException("Invalid email or password")
+          new LoginServiceFailedException("There is no user with this email")
         );
       }
 
