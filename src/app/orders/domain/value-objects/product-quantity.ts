@@ -13,9 +13,9 @@ export class OrderProductQuantity implements ValueObject<OrderProductQuantity> {
   }
 
   static create(value: number): OrderProductQuantity {
-    if (value < 0) {
+    if (value <= 0) {
       throw new OrderProductQuantityCreationFailedException(
-        `Invalid quantity: ${value}. Quantity cannot be negative.`
+        `Invalid quantity: ${value}. Quantity cannot be negative or equal to 0.`
       );
     }
     return new OrderProductQuantity(value);
