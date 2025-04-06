@@ -15,6 +15,7 @@ services:
       - ./postgres:/var/lib/postgresql/data
 
   avila-app:
+    restart: always
     ports:
       - "3000:3000"
     depends_on:
