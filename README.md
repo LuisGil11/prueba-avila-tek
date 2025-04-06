@@ -80,7 +80,7 @@ Esta API está construida utilizando:
 
 ### 🔄 Hexagonal Architecture
 
-Organizada por **puertos y adaptadores**, lo que permite mantener un núcleo de dominio limpio e independiente.
+Organizada en 3 capas: Infraestructura, Aplicación y Dominio, lo que nos permite tener un dominio mucho más limpio al depender de abtracciones y no de dependencias concretas
 
 ### 🧠 DDD + CQRS
 
@@ -90,7 +90,7 @@ Organizada por **puertos y adaptadores**, lo que permite mantener un núcleo de 
 
 ### 📣 Eventos de Dominio
 
-Se disparan desde el núcleo tras ciertas operaciones (`OrderCreated`, `StockDecreased`, etc.) y actualizan los modelos de lectura para mantener **consistencia eventual** entre escritura y lectura.
+Se disparan desde el dominio tras operaciones que modifican el estado de los agregados y actualizan los modelos de lectura por medio de event handlers para mantener **consistencia eventual** entre escritura y lectura.
 
 ---
 
