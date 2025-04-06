@@ -1,14 +1,14 @@
 import express from "express";
-import { PinoLogger } from "@core/infraestructure";
-import authRoutes from "@app/auth/infraestructure/auth.routes";
-import seedRoutes from "@app/seed/infraestructure/seed.routes";
-import productRoutes from "@app/products/infraestructure/products.routes";
-import orderRoutes from "@app/orders/infraestructure/orders.routes";
-import "@app/auth/infraestructure/sync-handlers/user-registered.handler";
-import "@app/products/infraestructure/sync-handlers";
-import "@app/products/infraestructure/sync-handlers/product-ordered.handler";
-import "@app/orders/infraestructure/sync-handlers/order-created.handler";
-import "@app/orders/infraestructure/sync-handlers/order-status-changed.handler";
+import { PinoLogger } from "@core/infrastructure";
+import authRoutes from "@app/auth/infrastructure/auth.routes";
+import seedRoutes from "@app/seed/infrastructure/seed.routes";
+import productRoutes from "@app/products/infrastructure/products.routes";
+import orderRoutes from "@app/orders/infrastructure/orders.routes";
+import "@app/auth/infrastructure/sync-handlers/user-registered.handler";
+import "@app/products/infrastructure/sync-handlers";
+import "@app/products/infrastructure/sync-handlers/product-ordered.handler";
+import "@app/orders/infrastructure/sync-handlers/order-created.handler";
+import "@app/orders/infrastructure/sync-handlers/order-status-changed.handler";
 
 const app = express();
 const logger = PinoLogger.getInstance();

@@ -8,7 +8,7 @@ import { OrderNotFoundException } from "../../exceptions/order-not-found.excepti
 import { OrderId } from "@app/orders/domain/value-objects";
 import { Order } from "@app/orders/domain/order";
 import { ChangeOrderStatusResponse } from "./responses/change-order-status.response";
-import { UnexpectedExceptionHandler } from "@core/infraestructure/exceptions/unexpected-error.exception";
+import { UnexpectedExceptionHandler } from "@core/infrastructure/exceptions/unexpected-error.exception";
 
 export class ChangeOrderStatusService
   implements Service<ChangeOrderStatusDto, ChangeOrderStatusResponse>

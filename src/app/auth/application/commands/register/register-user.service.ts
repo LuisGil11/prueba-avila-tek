@@ -16,7 +16,7 @@ import {
 import { User as DomainUser } from "@app/auth/domain/user";
 import { EventBus } from "@core/domain/event-bus";
 import { AuthorizedResponse } from "../response/authorized.response";
-import { UnexpectedExceptionHandler } from "@core/infraestructure/exceptions/unexpected-error.exception";
+import { UnexpectedExceptionHandler } from "@core/infrastructure/exceptions/unexpected-error.exception";
 
 export class RegisterUserService
   implements Service<CreateUserDto, AuthorizedResponse>

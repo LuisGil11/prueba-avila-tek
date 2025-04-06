@@ -4,7 +4,7 @@ import { DeleteProductResponse } from "./response/delete-product.response";
 import { Result, BaseException } from "@core/utils";
 import { ProductsRepository } from "../../repositories/product.repository";
 import { ProductNotFoundException } from "../../exceptions";
-import { UnexpectedExceptionHandler } from "@core/infraestructure/exceptions/unexpected-error.exception";
+import { UnexpectedExceptionHandler } from "@core/infrastructure/exceptions/unexpected-error.exception";
 
 export class DeleteProductService
   implements Service<DeleteProductDto, DeleteProductResponse>

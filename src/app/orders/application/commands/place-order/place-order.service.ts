@@ -19,7 +19,7 @@ import { UserId } from "@app/auth/domain/value-objects";
 import { Order } from "@app/orders/domain/order";
 import { Currencies } from "@app/orders/domain/enum/currencies";
 import { OrderStatus } from "@app/orders/domain/value-objects/status";
-import { UnexpectedExceptionHandler } from "@core/infraestructure/exceptions/unexpected-error.exception";
+import { UnexpectedExceptionHandler } from "@core/infrastructure/exceptions/unexpected-error.exception";
 import { Product } from "@app/products/domain/product";
 
 export class PlaceOrderService

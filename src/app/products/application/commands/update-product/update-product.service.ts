@@ -14,7 +14,7 @@ import {
   ProductStock,
 } from "@app/products/domain/value-objects";
 import { ProductNotFoundException } from "../../exceptions";
-import { UnexpectedExceptionHandler } from "@core/infraestructure/exceptions/unexpected-error.exception";
+import { UnexpectedExceptionHandler } from "@core/infrastructure/exceptions/unexpected-error.exception";
 
 export class UpdateProductService
   implements Service<UpdateProductDto, UpdateProductResponse>

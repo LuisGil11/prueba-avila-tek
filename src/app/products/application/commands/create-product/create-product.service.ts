@@ -14,7 +14,7 @@ import {
 import { Product } from "@app/products/domain/product";
 import { EventBus } from "@core/domain/event-bus";
 import { Currencies } from "@app/orders/domain/enum/currencies";
-import { UnexpectedExceptionHandler } from "@core/infraestructure/exceptions/unexpected-error.exception";
+import { UnexpectedExceptionHandler } from "@core/infrastructure/exceptions/unexpected-error.exception";
 
 export class CreateProductService
   implements Service<CreateProductDto, CreateProductResponse>

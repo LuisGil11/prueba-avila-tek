@@ -4,7 +4,7 @@ import { AuthorizedResponse } from "../response/authorized.response";
 import { Result, BaseException } from "@core/utils";
 import { UsersRepository } from "../../repository";
 import { PasswordEncripterService, TokenService } from "../../services";
-import { UnexpectedExceptionHandler } from "@core/infraestructure/exceptions/unexpected-error.exception";
+import { UnexpectedExceptionHandler } from "@core/infrastructure/exceptions/unexpected-error.exception";
 
 export class LoginService implements Service<LoginDto, AuthorizedResponse> {
   constructor(
