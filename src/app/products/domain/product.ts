@@ -65,7 +65,7 @@ export class Product extends AggregateRoot<ProductId> {
       );
     }
 
-    if (this._stock?.value.quantity! - quantity.value.quantity < 0) {
+    if (this._stock?.value.quantity! - quantity.value.quantity <= 0) {
       throw new InsufficientStockException(
         "Insufficient stock to fulfill the order"
       );
